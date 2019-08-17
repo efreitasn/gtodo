@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
 	"time"
 
 	"github.com/efreitasn/go-todo/internal/data/todo"
+	"github.com/efreitasn/go-todo/internal/utils"
 )
 
 var todos []todo.Todo = []todo.Todo{
@@ -18,7 +18,5 @@ var todos []todo.Todo = []todo.Todo{
 
 // ListTodos list all todos.
 func ListTodos(w http.ResponseWriter, r *http.Request) {
-	jsonEnc := json.NewEncoder(w)
-
-	jsonEnc.Encode(todos)
+	utils.WriteTemplates(w, todos, "todos")
 }
