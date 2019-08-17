@@ -6,6 +6,7 @@ import (
 
 	"github.com/efreitasn/go-todo/internal/data/todo"
 	"github.com/efreitasn/go-todo/internal/utils"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var todos []todo.Todo = []todo.Todo{
@@ -16,7 +17,12 @@ var todos []todo.Todo = []todo.Todo{
 	},
 }
 
-// ListTodos list all todos.
-func ListTodos(w http.ResponseWriter, r *http.Request) {
+// Todo is the representation of all the todo-related handlers.
+type Todo struct {
+	db *mongo.Database
+}
+
+// List list all todos.
+func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 	utils.WriteTemplates(w, todos, "todos")
 }
