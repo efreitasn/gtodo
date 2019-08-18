@@ -12,12 +12,12 @@ import (
 
 // Todo is the representation of all the todo-related handlers.
 type Todo struct {
-	db *mongo.Database
+	c *mongo.Collection
 }
 
 // List list all todos.
 func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
-	cur, _ := t.db.Collection("todos").Find(
+	cur, _ := t.c.Find(
 		context.Background(),
 		bson.D{},
 	)

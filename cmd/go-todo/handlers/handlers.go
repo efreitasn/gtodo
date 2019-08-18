@@ -10,7 +10,7 @@ import (
 // NewMux creates a mux handler.
 func NewMux(db *mongo.Database) http.Handler {
 	mux := httptreemux.NewContextMux()
-	todo := Todo{db}
+	todo := Todo{db.Collection("todos")}
 
 	mux.GET("/todos", todo.List)
 
