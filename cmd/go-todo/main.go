@@ -15,11 +15,18 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	client, _ := mongo.Connect(
+	client, err := mongo.Connect(
 		ctx,
 		options.Client().ApplyURI(os.Getenv("MONGODB_URL")),
 	)
-	db := client.Database("go-todo")
+
+	if err != nil {
+		os.Stderr.WriteString(err.Error() + "\n")
+
+		os.Exit(1)
+	}
+
+	db := client.Database(os.Getenv("MONGODB_DB"))
 
 	mux := handlers.Setup(db)
 	server := &http.Server{
