@@ -15,9 +15,18 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	mongoOptions := options.Client()
+
+	mongoOptions.ApplyURI(os.Getenv("MONGODB_URL"))
+	mongoOptions.SetAuth(options.Credential{
+		Username:    os.Getenv("MONGODB_USERNAME"),
+		Password:    os.Getenv("MONGODB_PASSWORD"),
+		PasswordSet: os.Getenv("MONGODB_PASSWORD") == "",
+	})
+
 	client, err := mongo.Connect(
 		ctx,
-		options.Client().ApplyURI(os.Getenv("MONGODB_URL")),
+		mongoOptions,
 	)
 
 	if err != nil {
