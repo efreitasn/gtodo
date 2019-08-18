@@ -21,7 +21,7 @@ func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	cur, err := t.c.Find(
+	cursor, err := t.c.Find(
 		ctx,
 		bson.D{},
 	)
@@ -34,7 +34,7 @@ func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 
 	var todos []todo.Todo
 
-	cur.All(
+	cursor.All(
 		context.Background(),
 		&todos,
 	)
