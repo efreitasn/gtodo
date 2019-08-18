@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/dimfeld/httptreemux"
+	"github.com/dimfeld/httptreemux/v5"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
