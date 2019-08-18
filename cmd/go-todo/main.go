@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -30,9 +31,7 @@ func main() {
 	)
 
 	if err != nil {
-		os.Stderr.WriteString(err.Error() + "\n")
-
-		os.Exit(1)
+		log.Fatalln(err.Error())
 	}
 
 	db := client.Database(os.Getenv("MONGODB_DB"))
