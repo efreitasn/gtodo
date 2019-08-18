@@ -7,8 +7,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Setup generates a mux handler.
-func Setup(db *mongo.Database) http.Handler {
+// NewMux creates a mux handler.
+func NewMux(db *mongo.Database) http.Handler {
 	mux := httptreemux.NewContextMux()
 	todo := Todo{db}
 

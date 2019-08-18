@@ -37,7 +37,7 @@ func main() {
 
 	db := client.Database(os.Getenv("MONGODB_DB"))
 
-	mux := handlers.Setup(db)
+	mux := handlers.NewMux(db)
 	server := &http.Server{
 		Addr:    ":8080",
 		Handler: mux,
