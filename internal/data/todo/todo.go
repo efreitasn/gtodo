@@ -1,11 +1,21 @@
 package todo
 
-import "time"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 // Todo is an item of the list.
 type Todo struct {
-	ID        string
-	Title     string
-	Done      bool
-	CreatedAt time.Time
+	ID        *primitive.ObjectID `bson:"_id"`
+	Title     string              `bson:"title"`
+	CreatedAt time.Time           `bson:"createdAt"`
+}
+
+// InsertTodo is an item to be inserted into the database.
+type InsertTodo struct {
+	Title     string    `bson:"title"`
+	Done      bool      `bson:"done"`
+	CreatedAt time.Time `bson:"createdAt"`
 }
