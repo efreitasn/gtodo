@@ -2,7 +2,8 @@
 
 <div>
   {{ if .FlashMessage }}
-    <div>{{ .FlashMessage }}</div>
+    <div>{{ .FlashMessage.Kind }}</div>
+    <div>{{ .FlashMessage.Content }}</div>
   {{ end }}
 
   <form enctype="application/x-www-form-urlencoded" action="/todos" method="POST">
