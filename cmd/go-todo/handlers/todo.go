@@ -67,8 +67,8 @@ func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 	utils.WriteTemplates(w, templateData, "todos")
 }
 
-// Insert adds a todo.
-func (t *Todo) Insert(w http.ResponseWriter, r *http.Request) {
+// Add adds a todo.
+func (t *Todo) Add(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 

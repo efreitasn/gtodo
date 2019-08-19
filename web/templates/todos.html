@@ -6,7 +6,7 @@
     <div>{{ .FlashMessage.Content }}</div>
   {{ end }}
 
-  <form enctype="application/x-www-form-urlencoded" action="/todos" method="POST">
+  <form enctype="application/x-www-form-urlencoded" action="/todos/add" method="POST">
     <input type="text" name="title">
     <button type="submit">Add</button>
   </form>
