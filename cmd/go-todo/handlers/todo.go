@@ -7,6 +7,7 @@ import (
 
 	"github.com/efreitasn/go-todo/internal/data/todo"
 	"github.com/efreitasn/go-todo/internal/utils"
+	"github.com/efreitasn/go-todo/pkg/flash"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -18,6 +19,11 @@ type Todo struct {
 
 // List list all todos.
 func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
+	templateData := struct {
+		Todos        []todo.Todo
+		FlashMessage *flash.Message
+	}{}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -27,7 +33,12 @@ func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		utils.WriteTemplates(w, "Error while fetching the list of todos.", "error")
+		templateData.FlashMessage = &flash.Message{
+			Kind:    1,
+			Content: "Error while fetching the list of todos.",
+		}
+
+		utils.WriteTemplates(w, templateData, "todos")
 
 		return
 	}
@@ -39,13 +50,8 @@ func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 		&todos,
 	)
 
-	templateData := struct {
-		Todos        []todo.Todo
-		FlashMessage *utils.FlashMessage
-	}{
-		todos,
-		utils.ReadFlashMessage(w, r),
-	}
+	templateData.Todos = todos
+	templateData.FlashMessage = flash.Read(w, r)
 
 	utils.WriteTemplates(w, templateData, "todos")
 }
@@ -68,19 +74,24 @@ func (t *Todo) Insert(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		utils.WriteTemplates(w, "Error while adding the todo.", "error")
+		flash.Add(
+			"/todos",
+			w,
+			&flash.Message{
+				Kind:    1,
+				Content: "Error while adding the todo.",
+			},
+		)
 
 		return
 	}
 
-	utils.AddFlashMessage(
+	flash.Add(
+		"/todos",
 		w,
-		&utils.FlashMessage{
+		&flash.Message{
 			Kind:    0,
 			Content: "Todo added!",
 		},
 	)
-
-	w.Header().Set("Location", "/todos")
-	w.WriteHeader(303)
 }

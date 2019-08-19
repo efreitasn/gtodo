@@ -1,4 +1,4 @@
-package utils
+package flash
 
 import (
 	"encoding/base64"
@@ -10,29 +10,32 @@ import (
 
 const cookieName = "flash"
 
-// FlashMessage is a message used with cookies.
+// Message is a message used with cookies.
 // The kind field of the message follows the linux commands' exit code semantics, i.e., 0 for success and any other number for failure.
-type FlashMessage struct {
+type Message struct {
 	Kind    int
 	Content string
 }
 
-// AddFlashMessage adds a flash message to the provided response.
-func AddFlashMessage(w http.ResponseWriter, fMsg *FlashMessage) {
+// Add adds a flash message to the provided response.
+func Add(url string, w http.ResponseWriter, msg *Message) {
 	value := fmt.Sprintf(
 		"%v:%v",
-		strconv.Itoa(fMsg.Kind),
-		base64.URLEncoding.EncodeToString([]byte(fMsg.Content)),
+		strconv.Itoa(msg.Kind),
+		base64.URLEncoding.EncodeToString([]byte(msg.Content)),
 	)
 
 	http.SetCookie(w, &http.Cookie{
 		Name:  cookieName,
 		Value: value,
 	})
+
+	w.Header().Set("Location", url)
+	w.WriteHeader(303)
 }
 
-// ReadFlashMessage returns the flash message present in the provided request.
-func ReadFlashMessage(w http.ResponseWriter, r *http.Request) *FlashMessage {
+// Read returns the flash message present in the provided request.
+func Read(w http.ResponseWriter, r *http.Request) *Message {
 	flashCookie, err := r.Cookie(cookieName)
 
 	if err == http.ErrNoCookie {
@@ -57,7 +60,7 @@ func ReadFlashMessage(w http.ResponseWriter, r *http.Request) *FlashMessage {
 		return nil
 	}
 
-	return &FlashMessage{
+	return &Message{
 		Kind:    kind,
 		Content: string(content),
 	}
