@@ -45,10 +45,21 @@ func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 
 	var todos []todo.Todo
 
-	cursor.All(
+	err = cursor.All(
 		context.Background(),
 		&todos,
 	)
+
+	if err != nil {
+		templateData.FlashMessage = &flash.Message{
+			Kind:    1,
+			Content: "Error while fetching the list of todos.",
+		}
+
+		utils.WriteTemplates(w, templateData, "todos")
+
+		return
+	}
 
 	templateData.Todos = todos
 	templateData.FlashMessage = flash.Read(w, r)
