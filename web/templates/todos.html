@@ -1,7 +1,16 @@
 {{ define "content" }}
 
 <div>
-  {{ range . }}
+  {{ if .FlashMessage }}
+    <div>{{ .FlashMessage }}</div>
+  {{ end }}
+
+  <form enctype="application/x-www-form-urlencoded" action="/todos" method="POST">
+    <input type="text" name="title">
+    <button type="submit">Add</button>
+  </form>
+
+  {{ range .Todos }}
   <div>{{ .Title }}</div>
   {{ end }}
 </div>

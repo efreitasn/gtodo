@@ -39,7 +39,15 @@ func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 		&todos,
 	)
 
-	utils.WriteTemplates(w, todos, "todos")
+	templateData := struct {
+		Todos        []todo.Todo
+		FlashMessage string
+	}{
+		todos,
+		utils.ReadFlashMessage(w, r),
+	}
+
+	utils.WriteTemplates(w, templateData, "todos")
 }
 
 // Insert adds a todo.
@@ -64,4 +72,9 @@ func (t *Todo) Insert(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
+
+	utils.AddFlashMessage(w, "Todo added!")
+
+	w.Header().Set("Location", "/todos")
+	w.WriteHeader(303)
 }
