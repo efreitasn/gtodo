@@ -10,6 +10,7 @@ import (
 type Todo struct {
 	ID        *primitive.ObjectID `bson:"_id"`
 	Title     string              `bson:"title"`
+	Done      bool                `bson:"done"`
 	CreatedAt time.Time           `bson:"createdAt"`
 }
 

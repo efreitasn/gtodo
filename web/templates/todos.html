@@ -12,7 +12,15 @@
   </form>
 
   {{ range .Todos }}
-  <div>{{ .Title }}</div>
+  <div>
+    {{ if .Done }}
+      <input type="checkbox" checked>
+    {{ else }}
+      <input type="checkbox">
+    {{ end }}
+
+    {{ .Title }}
+  </div>
   {{ end }}
 </div>
 
