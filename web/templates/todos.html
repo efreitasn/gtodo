@@ -11,17 +11,23 @@
     <button type="submit">Add</button>
   </form>
 
-  {{ range .Todos }}
-  <div>
-    {{ if .Done }}
-      <input type="checkbox" checked>
-    {{ else }}
-      <input type="checkbox">
+  <form enctype="application/x-www-form-urlencoded" action="/todos/update" method="POST">
+    {{ range .Todos }}
+      <div>
+        <input
+          type="checkbox"
+          name="done"
+          value="{{ .ID.Hex }}"
+          id="{{ .ID.Hex }}"
+          {{ if .Done }}checked{{ end }}
+        >
+        <label for="{{ .ID.Hex }}">
+          {{ .Title }}
+        </label>
+      </div>
     {{ end }}
-
-    {{ .Title }}
-  </div>
-  {{ end }}
+    <button type="submit">Update</button>
+  </form>
 </div>
 
 {{ end }}

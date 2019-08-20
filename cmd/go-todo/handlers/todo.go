@@ -9,6 +9,7 @@ import (
 	"github.com/efreitasn/go-todo/internal/utils"
 	"github.com/efreitasn/go-todo/pkg/flash"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -103,6 +104,121 @@ func (t *Todo) Add(w http.ResponseWriter, r *http.Request) {
 		&flash.Message{
 			Kind:    0,
 			Content: "Todo added!",
+		},
+	)
+}
+
+// Update updates the todos.
+func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	r.ParseForm()
+
+	doneTodosIDs, ok := r.Form["done"]
+
+	if ok {
+		orO := make([]interface{}, len(doneTodosIDs))
+
+		for i, doneTodosID := range doneTodosIDs {
+			oID, _ := primitive.ObjectIDFromHex(doneTodosID)
+
+			orO[i] = bson.D{{"_id", oID}}
+		}
+
+		filterOr := bson.D{
+			{"$or", bson.A(orO)},
+		}
+
+		filterNor := bson.D{
+			{"$nor", bson.A(orO)},
+		}
+
+		_, err := t.c.UpdateMany(
+			ctx,
+			filterOr,
+			bson.D{
+				{
+					"$set",
+					bson.D{
+						{"done", true},
+					},
+				},
+			},
+		)
+
+		if err != nil {
+			flash.Add(
+				"/todos",
+				w,
+				&flash.Message{
+					Content: "Error while updating todos.",
+					Kind:    1,
+				},
+			)
+
+			return
+		}
+
+		_, err = t.c.UpdateMany(
+			ctx,
+			filterNor,
+			bson.D{
+				{
+					"$set",
+					bson.D{
+						{"done", false},
+					},
+				},
+			},
+		)
+
+		if err != nil {
+			flash.Add(
+				"/todos",
+				w,
+				&flash.Message{
+					Content: "Error while updating todos.",
+					Kind:    1,
+				},
+			)
+
+			return
+		}
+	} else {
+		_, err := t.c.UpdateMany(
+			ctx,
+			bson.D{},
+			bson.D{
+				{
+					"$set",
+					bson.D{
+						{"done", false},
+					},
+				},
+			},
+		)
+
+		if err != nil {
+			flash.Add(
+				"/todos",
+				w,
+				&flash.Message{
+					Content: "Error while updating todos.",
+					Kind:    1,
+				},
+			)
+
+			return
+		}
+	}
+
+	flash.Add(
+		"/todos",
+		w,
+		&flash.Message{
+			Content: "Todos updated!",
+			Kind:    0,
 		},
 	)
 }
