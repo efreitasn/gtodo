@@ -108,6 +108,28 @@ func (t *Todo) Add(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
+func updateFlashMessage(w http.ResponseWriter, success bool) {
+	var msg *flash.Message
+
+	if success {
+		msg = &flash.Message{
+			Content: "Todos updated!",
+			Kind:    0,
+		}
+	} else {
+		msg = &flash.Message{
+			Content: "Error while updating todos.",
+			Kind:    1,
+		}
+	}
+
+	flash.Add(
+		"/todos",
+		w,
+		msg,
+	)
+}
+
 // Update updates the todos.
 func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
@@ -118,12 +140,19 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 	doneTodosIDs, ok := r.Form["done"]
 
 	if ok {
-		orO := make([]interface{}, len(doneTodosIDs))
+		// Generate filtering-related values
+		filterValue := make(bson.A, len(doneTodosIDs))
 
 		for i, doneTodosID := range doneTodosIDs {
-			oID, _ := primitive.ObjectIDFromHex(doneTodosID)
+			oID, err := primitive.ObjectIDFromHex(doneTodosID)
 
-			orO[i] = bson.D{
+			if err != nil {
+				updateFlashMessage(w, false)
+
+				return
+			}
+
+			filterValue[i] = bson.D{
 				{
 					Key:   "_id",
 					Value: oID,
@@ -134,14 +163,14 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 		filterOr := bson.D{
 			{
 				Key:   "$or",
-				Value: bson.A(orO),
+				Value: filterValue,
 			},
 		}
 
 		filterNor := bson.D{
 			{
 				Key:   "$nor",
-				Value: bson.A(orO),
+				Value: filterValue,
 			},
 		}
 
@@ -162,14 +191,7 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			flash.Add(
-				"/todos",
-				w,
-				&flash.Message{
-					Content: "Error while updating todos.",
-					Kind:    1,
-				},
-			)
+			updateFlashMessage(w, false)
 
 			return
 		}
@@ -191,14 +213,7 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			flash.Add(
-				"/todos",
-				w,
-				&flash.Message{
-					Content: "Error while updating todos.",
-					Kind:    1,
-				},
-			)
+			updateFlashMessage(w, false)
 
 			return
 		}
@@ -220,25 +235,11 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			flash.Add(
-				"/todos",
-				w,
-				&flash.Message{
-					Content: "Error while updating todos.",
-					Kind:    1,
-				},
-			)
+			updateFlashMessage(w, false)
 
 			return
 		}
 	}
 
-	flash.Add(
-		"/todos",
-		w,
-		&flash.Message{
-			Content: "Todos updated!",
-			Kind:    0,
-		},
-	)
+	updateFlashMessage(w, true)
 }
