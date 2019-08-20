@@ -27,6 +27,7 @@ func Add(url string, w http.ResponseWriter, msg *Message) {
 
 	http.SetCookie(w, &http.Cookie{
 		Name:  cookieName,
+		Path:  "/",
 		Value: value,
 	})
 
@@ -44,8 +45,13 @@ func Read(w http.ResponseWriter, r *http.Request) *Message {
 
 	http.SetCookie(w, &http.Cookie{
 		Name:   cookieName,
+		Path:   "/",
 		MaxAge: -1,
 	})
+
+	if flashCookie.Value == "" {
+		return nil
+	}
 
 	parts := strings.Split(flashCookie.Value, ":")
 	content, err := base64.URLEncoding.DecodeString(parts[1])
