@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -11,6 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // Todo is the representation of all the todo-related handlers.
@@ -31,9 +33,18 @@ func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 	cursor, err := t.c.Find(
 		ctx,
 		bson.D{},
+		&options.FindOptions{
+			Sort: bson.D{
+				{
+					Key:   "createdAt",
+					Value: 1,
+				},
+			},
+		},
 	)
 
 	if err != nil {
+		fmt.Println(err)
 		templateData.FlashMessage = &flash.Message{
 			Kind:    1,
 			Content: "Error while fetching the list of todos.",
