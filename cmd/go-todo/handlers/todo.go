@@ -123,15 +123,26 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 		for i, doneTodosID := range doneTodosIDs {
 			oID, _ := primitive.ObjectIDFromHex(doneTodosID)
 
-			orO[i] = bson.D{{"_id", oID}}
+			orO[i] = bson.D{
+				{
+					Key:   "_id",
+					Value: oID,
+				},
+			}
 		}
 
 		filterOr := bson.D{
-			{"$or", bson.A(orO)},
+			{
+				Key:   "$or",
+				Value: bson.A(orO),
+			},
 		}
 
 		filterNor := bson.D{
-			{"$nor", bson.A(orO)},
+			{
+				Key:   "$nor",
+				Value: bson.A(orO),
+			},
 		}
 
 		_, err := t.c.UpdateMany(
@@ -139,9 +150,12 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 			filterOr,
 			bson.D{
 				{
-					"$set",
-					bson.D{
-						{"done", true},
+					Key: "$set",
+					Value: bson.D{
+						{
+							Key:   "done",
+							Value: true,
+						},
 					},
 				},
 			},
@@ -165,9 +179,12 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 			filterNor,
 			bson.D{
 				{
-					"$set",
-					bson.D{
-						{"done", false},
+					Key: "$set",
+					Value: bson.D{
+						{
+							Key:   "done",
+							Value: false,
+						},
 					},
 				},
 			},
@@ -191,9 +208,12 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 			bson.D{},
 			bson.D{
 				{
-					"$set",
-					bson.D{
-						{"done", false},
+					Key: "$set",
+					Value: bson.D{
+						{
+							Key:   "done",
+							Value: false,
+						},
 					},
 				},
 			},
