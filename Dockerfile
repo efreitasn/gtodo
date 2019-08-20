@@ -1,8 +1,11 @@
 FROM golang:1.12.9
 
 WORKDIR /go-todo
+
+COPY go.mod go.sum ./
+RUN go mod download
+
 COPY . .
-RUN go get ./...
 
 EXPOSE 8080
 
