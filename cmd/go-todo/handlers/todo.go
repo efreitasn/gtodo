@@ -98,7 +98,7 @@ func (t *Todo) Add(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		flash.Add(
-			"/todos",
+			"/",
 			w,
 			&flash.Message{
 				Kind:    1,
@@ -110,7 +110,7 @@ func (t *Todo) Add(w http.ResponseWriter, r *http.Request) {
 	}
 
 	flash.Add(
-		"/todos",
+		"/",
 		w,
 		&flash.Message{
 			Kind:    0,
@@ -135,7 +135,7 @@ func updateFlashMessage(w http.ResponseWriter, success bool) {
 	}
 
 	flash.Add(
-		"/todos",
+		"/",
 		w,
 		msg,
 	)
