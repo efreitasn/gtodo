@@ -15,6 +15,7 @@ func NewMux(db *mongo.Database) http.Handler {
 	mux.GET("/", todo.List)
 	mux.POST("/todos/add", todo.Add)
 	mux.POST("/todos/update", todo.Update)
+	mux.GET("/static/*", static)
 
 	return mux
 }
