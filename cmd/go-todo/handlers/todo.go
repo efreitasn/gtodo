@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -44,10 +43,15 @@ func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		fmt.Println(err)
-		templateData.FlashMessage = &flash.Message{
-			Kind:    1,
-			Content: "Error while fetching the list of todos.",
+		flashMsgCookie := flash.Read(w, r)
+
+		if flashMsgCookie != nil {
+			templateData.FlashMessage = flashMsgCookie
+		} else {
+			templateData.FlashMessage = &flash.Message{
+				Kind:    1,
+				Content: "Error while fetching the list of todos.",
+			}
 		}
 
 		utils.WriteTemplates(w, templateData, "todos")
@@ -63,9 +67,15 @@ func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		templateData.FlashMessage = &flash.Message{
-			Kind:    1,
-			Content: "Error while fetching the list of todos.",
+		flashMsgCookie := flash.Read(w, r)
+
+		if flashMsgCookie != nil {
+			templateData.FlashMessage = flashMsgCookie
+		} else {
+			templateData.FlashMessage = &flash.Message{
+				Kind:    1,
+				Content: "Error while fetching the list of todos.",
+			}
 		}
 
 		utils.WriteTemplates(w, templateData, "todos")
@@ -100,10 +110,12 @@ func (t *Todo) Add(w http.ResponseWriter, r *http.Request) {
 		flash.Add(
 			"/",
 			w,
+			r,
 			&flash.Message{
 				Kind:    1,
 				Content: "Error while adding the todo.",
 			},
+			true,
 		)
 
 		return
@@ -112,14 +124,16 @@ func (t *Todo) Add(w http.ResponseWriter, r *http.Request) {
 	flash.Add(
 		"/",
 		w,
+		r,
 		&flash.Message{
 			Kind:    0,
 			Content: "Todo added!",
 		},
+		true,
 	)
 }
 
-func updateFlashMessage(w http.ResponseWriter, success bool) {
+func updateFlashMessage(w http.ResponseWriter, r *http.Request, success bool) {
 	var msg *flash.Message
 
 	if success {
@@ -137,7 +151,9 @@ func updateFlashMessage(w http.ResponseWriter, success bool) {
 	flash.Add(
 		"/",
 		w,
+		r,
 		msg,
+		true,
 	)
 }
 
@@ -158,7 +174,7 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 			oID, err := primitive.ObjectIDFromHex(doneTodosID)
 
 			if err != nil {
-				updateFlashMessage(w, false)
+				updateFlashMessage(w, r, false)
 
 				return
 			}
@@ -202,7 +218,7 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			updateFlashMessage(w, false)
+			updateFlashMessage(w, r, false)
 
 			return
 		}
@@ -224,7 +240,7 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			updateFlashMessage(w, false)
+			updateFlashMessage(w, r, false)
 
 			return
 		}
@@ -246,11 +262,11 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			updateFlashMessage(w, false)
+			updateFlashMessage(w, r, false)
 
 			return
 		}
 	}
 
-	updateFlashMessage(w, true)
+	updateFlashMessage(w, r, true)
 }
