@@ -1,33 +1,66 @@
 {{ define "content" }}
 
-<div>
+<div class="box">
+  <form
+    enctype="application/x-www-form-urlencoded"
+    action="/todos/add"
+    method="POST"
+    class="add-form {{ if .Todos }} add-form--border {{ end }}"
+  >
+    <input
+      type="text"
+      name="title"
+      class="add-input"
+      placeholder="Do something"
+      autocomplete="off"
+      required
+      autofocus
+    >
+    <button
+      type="submit"
+      class="button button--add"
+    >Add</button>
+  </form>
+
   {{ if .FlashMessage }}
-    <div>{{ .FlashMessage.Kind }}</div>
-    <div>{{ .FlashMessage.Content }}</div>
+    {{ if .FlashMessage.Kind }}
+      <div class="flash-message flash-message--error">
+      {{ else }}
+      <div class="flash-message flash-message--success">
+    {{ end }}
+      {{ .FlashMessage.Content }}
+    </div>
   {{ end }}
 
-  <form enctype="application/x-www-form-urlencoded" action="/todos/add" method="POST">
-    <input type="text" name="title">
-    <button type="submit">Add</button>
-  </form>
-
-  <form enctype="application/x-www-form-urlencoded" action="/todos/update" method="POST">
-    {{ range .Todos }}
-      <div>
-        <input
-          type="checkbox"
-          name="done"
-          value="{{ .ID.Hex }}"
-          id="{{ .ID.Hex }}"
-          {{ if .Done }}checked{{ end }}
-        >
-        <label for="{{ .ID.Hex }}">
-          {{ .Title }}
-        </label>
+  {{ if .Todos }}
+    <form
+      enctype="application/x-www-form-urlencoded"
+      action="/todos/update"
+      method="POST"
+      class="update-form"
+    >
+      <div class="todos">
+        {{ range .Todos }}
+          <label class="todo">
+            <input
+              type="checkbox"
+              name="done"
+              class="check-input"
+              value="{{ .ID.Hex }}"
+              id="{{ .ID.Hex }}"
+              {{ if .Done }}checked{{ end }}
+            >
+            <div class="check"></div>
+            <span>{{ .Title }}</span>
+          </label>
+        {{ end }}
       </div>
-    {{ end }}
-    <button type="submit">Update</button>
-  </form>
+      <button
+        type="submit"
+        class="button button--update"
+      >Update</button>
+    </form>
+  {{ end }}
 </div>
 
 {{ end }}
