@@ -13,6 +13,7 @@ func NewMux(db *mongo.Database) http.Handler {
 	todo := Todo{db.Collection("todos")}
 
 	mux.GET("/", todo.List)
+	mux.GET("/todos/delete", todo.DeleteList)
 	mux.POST("/todos/add", todo.Add)
 	mux.POST("/todos/update", todo.Update)
 	mux.GET("/static/*", static)

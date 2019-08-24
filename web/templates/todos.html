@@ -1,27 +1,45 @@
 {{ define "content" }}
 
+<nav class="main-nav">
+  <ul>
+    <li>
+      <a
+        href="/"
+        {{ if eq .Mode "add/update" }} class="active" {{ end }}
+      >add/update</a>
+    </li>
+    <li>
+      <a
+        href="/todos/delete"
+        {{ if eq .Mode "delete" }} class="active" {{ end }}
+      >delete</a>
+    </li>
+  </ul>
+</nav>
 <div class="box">
-  <form
-    enctype="application/x-www-form-urlencoded"
-    action="/todos/add"
-    method="POST"
-    class="add-form {{ if .HasTodos }} add-form--border {{ end }}"
-  >
-    <input
-      type="text"
-      name="title"
-      class="add-input"
-      placeholder="Do something"
-      autocomplete="off"
-      aria-label="Title of todo to be added"
-      required
-      autofocus
+  {{ if eq .Mode "add/update" }}
+    <form
+      enctype="application/x-www-form-urlencoded"
+      action="/todos/add"
+      method="POST"
+      class="add-form {{ if .HasTodos }} add-form--border {{ end }}"
     >
-    <button
-      type="submit"
-      class="button button--add"
-    >Add</button>
-  </form>
+      <input
+        type="text"
+        name="title"
+        class="add-input"
+        placeholder="Do something"
+        autocomplete="off"
+        aria-label="Title of todo to be added"
+        required
+        autofocus
+      >
+      <button
+        type="submit"
+        class="button button--add"
+      >Add</button>
+    </form>
+  {{ end }}
 
   {{ if .FlashMessage }}
     {{ if .FlashMessage.Kind }}
@@ -50,7 +68,6 @@
                 class="check-input invisible"
                 value="{{ .ID.Hex }}"
                 id="{{ .ID.Hex }}"
-                {{ if .Done }}checked{{ end }}
               >
               <div class="check"></div>
               <span>{{ .Title }}</span>
@@ -66,19 +83,21 @@
           <h2 class="todos-done-title">done</h2>
         </label>
         <div class="todos-done">
-          {{ range .TodosDone }}
-            <label class="todo">
-              <input
-                type="checkbox"
-                name="done"
-                class="check-input invisible"
-                value="{{ .ID.Hex }}"
-                id="{{ .ID.Hex }}"
-                {{ if .Done }}checked{{ end }}
-              >
-              <div class="check"></div>
-              <span>{{ .Title }}</span>
-            </label>
+          {{ with $data := . }}
+            {{ range .TodosDone }}
+              <label class="todo">
+                <input
+                  type="checkbox"
+                  name="done"
+                  class="check-input invisible"
+                  value="{{ .ID.Hex }}"
+                  id="{{ .ID.Hex }}"
+                  {{ if eq $data.Mode "add/update" }}checked{{ end }}
+                >
+                <div class="check"></div>
+                <span>{{ .Title }}</span>
+              </label>
+            {{ end }}
           {{ end }}
         </div>
       </div>

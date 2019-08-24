@@ -19,14 +19,16 @@ type Todo struct {
 	c *mongo.Collection
 }
 
-// List list all todos.
-func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
+func (t *Todo) fetch(w http.ResponseWriter, r *http.Request, mode string) {
 	templateData := struct {
 		TodosDone    []todo.Todo
 		TodosNotDone []todo.Todo
 		HasTodos     bool
 		FlashMessage *flash.Message
-	}{}
+		Mode         string
+	}{
+		Mode: mode,
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -157,6 +159,16 @@ func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
 	templateData.FlashMessage = flash.Read(w, r)
 
 	utils.WriteTemplates(w, templateData, "todos")
+}
+
+// List lists all todos.
+func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
+	t.fetch(w, r, "add/update")
+}
+
+// DeleteList lists the todos to delete.
+func (t *Todo) DeleteList(w http.ResponseWriter, r *http.Request) {
+	t.fetch(w, r, "delete")
 }
 
 // Add adds a todo.
