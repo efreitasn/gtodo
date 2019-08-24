@@ -32,7 +32,21 @@ body {
   flex-direction: column;
   margin: 5rem auto;
   overflow: hidden;
-  width: 40%;
+  width: 90vw;
+}
+
+/* ≃1000px */
+@media (min-width: 62.5em) {
+  .box {
+    width: 50vw;   
+  }
+}
+
+/* Utils */
+.invisible {
+  position: absolute;
+  clip-path: inset(100%);
+  clip: rect(0, 0, 0, 0);
 }
 
 /* Button */
@@ -110,10 +124,37 @@ body {
 
 .todos-done-title {
   background: var(--color-grey-1);
-  margin: 0;
-  padding: 1rem 1.5rem;
   font-size: 1.8rem;
+  margin: 0;
+  padding: 1.5rem;
   text-transform: uppercase;
+}
+
+.todos-done-title-wrapper {
+  display: block;
+  position: relative;
+}
+
+.todos-done-title-wrapper::after {
+  content: '';
+  border-bottom: 2px solid var(--color-grey-3);
+  border-left: 2px solid var(--color-grey-3);
+  height: 6px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  transform: rotate(-45deg);
+  transition: transform .5s ease;
+  width: 6px;
+}
+
+.todos-done-title-check:checked + .todos-done-title-wrapper + .todos-done {
+  display: none;
+}
+
+.todos-done-title-check:checked + .todos-done-title-wrapper::after {
+  top: 22px;
+  transform: rotate(495deg);
 }
 
 .todo {
@@ -149,14 +190,6 @@ body {
   margin-right: 1.5rem;
   position: relative;
   width: 2rem;
-}
-
-.check-input {
-  background-color: transparent;
-  border: 0;
-  position: absolute;
-  clip-path: inset(100%);
-  clip: rect(0, 0, 0, 0)
 }
 
 .check-input:checked + .check::after {

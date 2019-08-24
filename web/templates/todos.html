@@ -13,6 +13,7 @@
       class="add-input"
       placeholder="Do something"
       autocomplete="off"
+      aria-label="Title of todo to be added"
       required
       autofocus
     >
@@ -40,35 +41,46 @@
       class="update-form"
     >
       <div class="todos">
-        {{ range .TodosNotDone }}
-          <label class="todo">
-            <input
-              type="checkbox"
-              name="done"
-              class="check-input"
-              value="{{ .ID.Hex }}"
-              id="{{ .ID.Hex }}"
-              {{ if .Done }}checked{{ end }}
-            >
-            <div class="check"></div>
-            <span>{{ .Title }}</span>
-          </label>
-        {{ end }}
-        <h2 class="todos-done-title">done</h2>
-        {{ range .TodosDone }}
-          <label class="todo">
-            <input
-              type="checkbox"
-              name="done"
-              class="check-input"
-              value="{{ .ID.Hex }}"
-              id="{{ .ID.Hex }}"
-              {{ if .Done }}checked{{ end }}
-            >
-            <div class="check"></div>
-            <span>{{ .Title }}</span>
-          </label>
-        {{ end }}
+        <div>
+          {{ range .TodosNotDone }}
+            <label class="todo">
+              <input
+                type="checkbox"
+                name="done"
+                class="check-input invisible"
+                value="{{ .ID.Hex }}"
+                id="{{ .ID.Hex }}"
+                {{ if .Done }}checked{{ end }}
+              >
+              <div class="check"></div>
+              <span>{{ .Title }}</span>
+            </label>
+          {{ end }}
+        </div>
+        <input
+          type="checkbox"
+          class="todos-done-title-check invisible"
+          id="done-check"
+        >
+        <label class="todos-done-title-wrapper" for="done-check">
+          <h2 class="todos-done-title">done</h2>
+        </label>
+        <div class="todos-done">
+          {{ range .TodosDone }}
+            <label class="todo">
+              <input
+                type="checkbox"
+                name="done"
+                class="check-input invisible"
+                value="{{ .ID.Hex }}"
+                id="{{ .ID.Hex }}"
+                {{ if .Done }}checked{{ end }}
+              >
+              <div class="check"></div>
+              <span>{{ .Title }}</span>
+            </label>
+          {{ end }}
+        </div>
       </div>
       <button
         type="submit"
