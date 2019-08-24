@@ -5,7 +5,7 @@
     enctype="application/x-www-form-urlencoded"
     action="/todos/add"
     method="POST"
-    class="add-form {{ if .Todos }} add-form--border {{ end }}"
+    class="add-form {{ if .HasTodos }} add-form--border {{ end }}"
   >
     <input
       type="text"
@@ -32,7 +32,7 @@
     </div>
   {{ end }}
 
-  {{ if .Todos }}
+  {{ if .HasTodos }}
     <form
       enctype="application/x-www-form-urlencoded"
       action="/todos/update"
@@ -40,7 +40,22 @@
       class="update-form"
     >
       <div class="todos">
-        {{ range .Todos }}
+        {{ range .TodosNotDone }}
+          <label class="todo">
+            <input
+              type="checkbox"
+              name="done"
+              class="check-input"
+              value="{{ .ID.Hex }}"
+              id="{{ .ID.Hex }}"
+              {{ if .Done }}checked{{ end }}
+            >
+            <div class="check"></div>
+            <span>{{ .Title }}</span>
+          </label>
+        {{ end }}
+        <h2 class="todos-done-title">done</h2>
+        {{ range .TodosDone }}
           <label class="todo">
             <input
               type="checkbox"

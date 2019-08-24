@@ -108,6 +108,14 @@ body {
   height: 100%;
 }
 
+.todos-done-title {
+  background: var(--color-grey-1);
+  margin: 0;
+  padding: 1rem 1.5rem;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+}
+
 .todo {
   align-items: center;
   display: flex;
