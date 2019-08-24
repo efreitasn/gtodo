@@ -4,13 +4,13 @@
   <ul>
     <li>
       <a
-        href="/"
+        {{ if ne .Mode "add/update" }} href="/" {{ end }}
         {{ if eq .Mode "add/update" }} class="active" {{ end }}
       >add/update</a>
     </li>
     <li>
       <a
-        href="/todos/delete"
+        {{ if ne .Mode "delete" }} href="/todos/delete" {{ end }}
         {{ if eq .Mode "delete" }} class="active" {{ end }}
       >delete</a>
     </li>
