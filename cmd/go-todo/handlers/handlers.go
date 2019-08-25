@@ -14,7 +14,7 @@ func NewMux(db *mongo.Database) http.Handler {
 	auth := Auth{db.Collection("user")}
 
 	// Root
-	mux.GET("/", root)
+	mux.GET("/", http.RedirectHandler("/list", 301).ServeHTTP)
 
 	// Static
 	mux.GET("/static/*", static)
