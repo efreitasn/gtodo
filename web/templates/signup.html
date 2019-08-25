@@ -1,0 +1,39 @@
+{{ define "content" }}
+
+<form
+  action="/signup"
+  method="POST"
+>
+  <input
+    class="input"
+    type="text"
+    name="username"
+    placeholder="Username"
+    autofocus
+    required
+  >
+  <input
+    class="input"
+    type="text"
+    name="name"
+    placeholder="Name"
+    required
+  >
+  <input
+    class="input"
+    type="email"
+    name="email"
+    placeholder="Email"
+    required
+  >
+  <input
+    class="input"
+    type="password"
+    name="password"
+    placeholder="Password"
+    required
+  >
+  <button type="submit" class="button button--big">Signup</button>
+</form>
+
+{{ end }}

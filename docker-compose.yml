@@ -9,6 +9,7 @@ services:
       MONGODB_DB: go-todo
       MONGODB_USERNAME: madmin
       MONGODB_PASSWORD: madmin
+      BRANCA_SECRET: todoToDoTodostodoToDoTodostodoTo
     ports:
       - "8080:8080"
     volumes:

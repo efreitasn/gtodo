@@ -156,13 +156,13 @@ body {
   transition: opacity .2s ease;
 }
 
-.button--add {
+.button--small {
   background-color: var(--color-grey-1);
   color: var(--color-grey-2);
   flex: 1 0 auto;
 }
 
-.button--update {
+.button--big {
   background-color: var(--color-grey-2);
   color: var(--color-grey-1);
   padding: 1.5rem 2rem;
@@ -173,12 +173,31 @@ body {
   outline: none;
 }
 
-.button--add:hover, .button--add:focus {
+.button--small:hover, .button--small:focus {
   opacity: .6;
 }
 
-.button--update:hover, .button--update:focus:focus {
+.button--big:hover, .button--big:focus:focus {
   opacity: .9;
+}
+
+/* Forms */
+.input {
+  border: 0;
+  color: var(--color-grey-3);
+  font-size: 1.8rem;
+  padding: 1.5rem;
+  transition: background-color .2s ease;
+  width: 100%;
+}
+
+.input:focus {
+  background-color: var(--color-grey-1);
+  outline: none;
+}
+
+.input:not(:last-of-type) {
+  border-bottom: 2px solid var(--color-grey-1);
 }
 
 /* No todos */
@@ -203,15 +222,7 @@ body {
 }
 
 .add-input {
-  border: 0;
   flex: 0 1 auto;
-  font-size: 1.8rem;
-  padding: 1.5rem;
-  width: 100%;
-}
-
-.add-input:focus {
-  outline: none;
 }
 
 /* Todo */

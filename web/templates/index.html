@@ -12,30 +12,45 @@
   <main class="main-content">
     <nav class="main-nav">
       <ul>
-        <li>
-          <a
-            {{ if ne .Mode "list" }} href="/list" {{ end }}
-            {{ if eq .Mode "list" }} class="active" {{ end }}
-          >List</a>
-        </li>
-        <li>
-          <a
-            {{ if ne .Mode "add" }} href="/add" {{ end }}
-            {{ if eq .Mode "add" }} class="active" {{ end }}
-          >Add</a>
-        </li>
-        <li>
-          <a
-            {{ if ne .Mode "update" }} href="/update" {{ end }}
-            {{ if eq .Mode "update" }} class="active" {{ end }}
-          >Update</a>
-        </li>
-        <li>
-          <a
-            {{ if ne .Mode "delete" }} href="/delete" {{ end }}
-            {{ if eq .Mode "delete" }} class="active" {{ end }}
-          >Delete</a>
-        </li>
+        {{ if not .Auth }}
+          <li>
+            <a
+              {{ if ne .Mode "login" }} href="/login" {{ end }}
+              {{ if eq .Mode "login" }} class="active" {{ end }}
+            >Login</a>
+          </li>
+          <li>
+            <a
+              {{ if ne .Mode "signup" }} href="/signup" {{ end }}
+              {{ if eq .Mode "signup" }} class="active" {{ end }}
+            >Signup</a>
+          </li>
+        {{ else }}
+          <li>
+            <a
+              {{ if ne .Mode "list" }} href="/list" {{ end }}
+              {{ if eq .Mode "list" }} class="active" {{ end }}
+            >List</a>
+          </li>
+          <li>
+            <a
+              {{ if ne .Mode "add" }} href="/add" {{ end }}
+              {{ if eq .Mode "add" }} class="active" {{ end }}
+            >Add</a>
+          </li>
+          <li>
+            <a
+              {{ if ne .Mode "update" }} href="/update" {{ end }}
+              {{ if eq .Mode "update" }} class="active" {{ end }}
+            >Update</a>
+          </li>
+          <li>
+            <a
+              {{ if ne .Mode "delete" }} href="/delete" {{ end }}
+              {{ if eq .Mode "delete" }} class="active" {{ end }}
+            >Delete</a>
+          </li>
+        {{ end }}
       </ul>
     </nav>
     <div class="box">

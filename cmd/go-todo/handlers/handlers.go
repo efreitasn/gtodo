@@ -11,6 +11,7 @@ import (
 func NewMux(db *mongo.Database) http.Handler {
 	mux := httptreemux.NewContextMux()
 	todo := Todo{db.Collection("todos")}
+	auth := Auth{db.Collection("user")}
 
 	// Root
 	mux.GET("/", root)
@@ -18,20 +19,28 @@ func NewMux(db *mongo.Database) http.Handler {
 	// Static
 	mux.GET("/static/*", static)
 
+	// Login
+	mux.GET("/login", SetUpTemplateData(auth.LoginGET))
+	mux.POST("/login", auth.LoginPOST)
+
+	// Signup
+	mux.GET("/signup", SetUpTemplateData(auth.SignupGET))
+	mux.POST("/signup", auth.SignupPOST)
+
 	// List
-	mux.GET("/list", SetUpTemplateData(todo.ListGET))
+	mux.GET("/list", SetUpAuth(SetUpTemplateData(todo.ListGET)))
 
 	// Add
-	mux.GET("/add", SetUpTemplateData(todo.AddGET))
-	mux.POST("/add", todo.AddPOST)
+	mux.GET("/add", SetUpAuth(SetUpTemplateData(todo.AddGET)))
+	mux.POST("/add", SetUpAuth(todo.AddPOST))
 
 	// Update
-	mux.GET("/update", SetUpTemplateData(todo.UpdateGET))
-	mux.POST("/update", todo.UpdatePOST)
+	mux.GET("/update", SetUpAuth(SetUpTemplateData(todo.UpdateGET)))
+	mux.POST("/update", SetUpAuth(todo.UpdatePOST))
 
 	// Delete
-	mux.GET("/delete", SetUpTemplateData(todo.DeleteGET))
-	mux.POST("/delete", todo.DeletePOST)
+	mux.GET("/delete", SetUpAuth(SetUpTemplateData(todo.DeleteGET)))
+	mux.POST("/delete", SetUpAuth(todo.DeletePOST))
 
 	return *mux
 }
