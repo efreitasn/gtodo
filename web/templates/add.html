@@ -1,0 +1,25 @@
+{{ define "content" }}
+
+<form
+  enctype="application/x-www-form-urlencoded"
+  action="/add"
+  method="POST"
+  class="add-form"
+>
+  <input
+    type="text"
+    name="title"
+    class="add-input"
+    placeholder="Do something"
+    autocomplete="off"
+    aria-label="Title of todo to be added"
+    required
+    autofocus
+  >
+  <button
+    type="submit"
+    class="button button--add"
+  >Add</button>
+</form>
+
+{{ end }}

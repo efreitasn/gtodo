@@ -12,11 +12,26 @@ func NewMux(db *mongo.Database) http.Handler {
 	mux := httptreemux.NewContextMux()
 	todo := Todo{db.Collection("todos")}
 
-	mux.GET("/", todo.List)
-	mux.GET("/todos/delete", todo.DeleteList)
-	mux.POST("/todos/add", todo.Add)
-	mux.POST("/todos/update", todo.Update)
+	// Root
+	mux.GET("/", root)
+
+	// Static
 	mux.GET("/static/*", static)
 
-	return mux
+	// List
+	mux.GET("/list", SetUpTemplateData(todo.ListGET))
+
+	// Add
+	mux.GET("/add", SetUpTemplateData(todo.AddGET))
+	mux.POST("/add", todo.AddPOST)
+
+	// Update
+	mux.GET("/update", SetUpTemplateData(todo.UpdateGET))
+	mux.POST("/update", todo.UpdatePOST)
+
+	// Delete
+	mux.GET("/delete", SetUpTemplateData(todo.DeleteGET))
+	mux.POST("/delete", todo.DeletePOST)
+
+	return *mux
 }

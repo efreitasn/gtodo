@@ -1,0 +1,59 @@
+{{ define "todos" }}
+
+{{ range . }}
+  <label class="todo">
+    <input
+      id="{{ .ID.Hex }}"
+      type="checkbox"
+      name="done"
+      class="todo-check-input invisible"
+      value="{{ .ID.Hex }}"
+      {{ if .Done }} checked {{ end }}
+      disabled
+    >
+    <div class="todo-check"></div>
+    <span>{{ .Title }}</span>
+  </label>
+{{ end }}
+
+{{ end }}
+
+{{ define "content" }}
+
+{{ if or .TodosDone .TodosNotDone }}
+  <div class="todos">
+    <div class="not-done">
+      <input
+        type="checkbox"
+        class="accordion-check invisible"
+        id="not-done-check"
+        autofocus
+      >
+      <label class="accordion-label" for="not-done-check">
+        <h2>Not done</h2>
+      </label>
+      <div class="accordion-content">
+        {{ template "todos" .TodosNotDone }}
+      </div>
+    </div>
+    <div class="done">
+      <input
+        type="checkbox"
+        class="accordion-check invisible"
+        id="done-check"
+      >
+      <label class="accordion-label" for="done-check">
+        <h2>Done</h2>
+      </label>
+      <div class="accordion-content">
+        {{ template "todos" .TodosDone }}
+      </div>
+    </div>
+  </div>
+{{ else }}
+
+  {{ template "no-todos" }}
+
+{{ end }}
+
+{{ end }}

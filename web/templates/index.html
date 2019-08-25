@@ -5,13 +5,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/css/style.css">
   <title>go-todo</title>
 </head>
 <body>
-  <div class="content">
-    {{ template "content" . }}
-  </div>
+  <main class="main-content">
+    <nav class="main-nav">
+      <ul>
+        <li>
+          <a
+            {{ if ne .Mode "list" }} href="/list" {{ end }}
+            {{ if eq .Mode "list" }} class="active" {{ end }}
+          >List</a>
+        </li>
+        <li>
+          <a
+            {{ if ne .Mode "add" }} href="/add" {{ end }}
+            {{ if eq .Mode "add" }} class="active" {{ end }}
+          >Add</a>
+        </li>
+        <li>
+          <a
+            {{ if ne .Mode "update" }} href="/update" {{ end }}
+            {{ if eq .Mode "update" }} class="active" {{ end }}
+          >Update</a>
+        </li>
+        <li>
+          <a
+            {{ if ne .Mode "delete" }} href="/delete" {{ end }}
+            {{ if eq .Mode "delete" }} class="active" {{ end }}
+          >Delete</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="box">
+      {{ if .FlashMessage }}
+        {{ if .FlashMessage.Kind }}
+          <div class="flash-message flash-message--error">
+        {{ else }}
+          <div class="flash-message flash-message--success">
+        {{ end }}
+            {{ .FlashMessage.Content }}
+          </div>
+      {{ end }}
+
+      {{ template "content" . }}
+    </div>
+  </main>
 </body>
 </html>
 

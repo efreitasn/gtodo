@@ -1,0 +1,69 @@
+{{ define "todos" }}
+
+{{ range . }}
+  <label class="todo">
+    <input
+      id="{{ .ID.Hex }}"
+      type="checkbox"
+      name="delete"
+      class="todo-check-input invisible"
+      value="{{ .ID.Hex }}"
+    >
+    <div class="todo-check"></div>
+    <span>{{ .Title }}</span>
+  </label>
+{{ end }}
+
+{{ end }}
+
+{{ define "content" }}
+
+{{ if or .TodosDone .TodosNotDone }}
+  <form
+    enctype="application/x-www-form-urlencoded"
+    action="/delete"
+    method="POST"
+  >
+    <div class="todos">
+      <div class="not-done">
+        <input
+          type="checkbox"
+          class="accordion-check invisible"
+          id="not-done-check"
+          checked
+          autofocus
+        >
+        <label class="accordion-label" for="not-done-check">
+          <h2>Not done</h2>
+        </label>
+        <div class="accordion-content">
+          {{ template "todos" .TodosNotDone }}
+        </div>
+      </div>
+      <div class="done">
+        <input
+          type="checkbox"
+          class="accordion-check invisible"
+          id="done-check"
+          checked
+        >
+        <label class="accordion-label" for="done-check">
+          <h2>Done</h2>
+        </label>
+        <div class="accordion-content">
+          {{ template "todos" .TodosDone }}
+        </div>
+      </div>
+    </div>
+    <button
+      type="submit"
+      class="button button--update"
+    >Delete</button>
+  </form>
+{{ else }}
+
+  {{ template "no-todos" }}
+
+{{ end }}
+
+{{ end }}

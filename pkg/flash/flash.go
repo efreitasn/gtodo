@@ -19,11 +19,9 @@ type Message struct {
 
 // Add adds a flash message to the provided response.
 func Add(url string, w http.ResponseWriter, r *http.Request, msg *Message, withRedirect bool) {
-	c, err := r.Cookie(cookieName)
-	fmt.Println(err)
+	_, err := r.Cookie(cookieName)
 
 	if err != http.ErrNoCookie {
-		fmt.Println(c, "aa")
 		return
 	}
 

@@ -11,7 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // Todo is the representation of all the todo-related handlers.
@@ -19,160 +18,118 @@ type Todo struct {
 	c *mongo.Collection
 }
 
-func (t *Todo) fetch(w http.ResponseWriter, r *http.Request, mode string) {
-	templateData := struct {
-		TodosDone    []todo.Todo
-		TodosNotDone []todo.Todo
-		HasTodos     bool
-		FlashMessage *flash.Message
-		Mode         string
-	}{
-		Mode: mode,
-	}
+/*
+ * Messages
+ */
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+// Utils
+var fetchDoneNotDoneErrorMsg = &flash.Message{
+	Kind:    1,
+	Content: "Error while fetching the list of todos.",
+}
+
+// Add
+var addPOSTErrorMsg = &flash.Message{
+	Kind:    1,
+	Content: "Error while adding the todo.",
+}
+
+var addPOSTSuccessMsg = &flash.Message{
+	Kind:    0,
+	Content: "Todo added!",
+}
+
+// Update
+var updateGETErrorMsg = &flash.Message{
+	Kind:    1,
+	Content: "Error while fetching the list of todos.",
+}
+
+var updatePOSTSuccessMsg = &flash.Message{
+	Content: "Todos updated!",
+	Kind:    0,
+}
+
+var updatePOSTErrorMsg = &flash.Message{
+	Content: "Error while updating todos.",
+	Kind:    1,
+}
+
+// Delete
+var deletePOSTSuccessMsg = &flash.Message{
+	Content: "Todos deleted!",
+	Kind:    0,
+}
+
+var deletePOSTErrorMsg = &flash.Message{
+	Content: "Error while deleting todos.",
+	Kind:    1,
+}
+
+/*
+ * Utils
+ */
+
+func (t *Todo) fetchDoneNotDone(w http.ResponseWriter, r *http.Request, tData *TemplateData) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
 	// Done
-	cursorDone, err := t.c.Find(
-		ctx,
-		bson.D{
-			{
-				Key:   "done",
-				Value: true,
-			},
-		},
-		&options.FindOptions{
-			Sort: bson.D{
-				{
-					Key:   "createdAt",
-					Value: 1,
-				},
-			},
-		},
-	)
+	todosDone, err := todo.FetchDone(ctx, t.c)
 
 	if err != nil {
-		flashMsgCookie := flash.Read(w, r)
-
-		if flashMsgCookie != nil {
-			templateData.FlashMessage = flashMsgCookie
-		} else {
-			templateData.FlashMessage = &flash.Message{
-				Kind:    1,
-				Content: "Error while fetching the list of todos.",
-			}
+		if tData.FlashMessage == nil {
+			tData.FlashMessage = fetchDoneNotDoneErrorMsg
 		}
 
-		utils.WriteTemplates(w, templateData, "todos")
-
-		return
-	}
-
-	var todosDone []todo.Todo
-
-	err = cursorDone.All(
-		context.Background(),
-		&todosDone,
-	)
-
-	if err != nil {
-		flashMsgCookie := flash.Read(w, r)
-
-		if flashMsgCookie != nil {
-			templateData.FlashMessage = flashMsgCookie
-		} else {
-			templateData.FlashMessage = &flash.Message{
-				Kind:    1,
-				Content: "Error while fetching the list of todos.",
-			}
-		}
-
-		utils.WriteTemplates(w, templateData, "todos")
+		utils.WriteTemplates(w, tData, tData.Mode, "no-todos")
 
 		return
 	}
 
 	// Not done
-	cursorNotDone, err := t.c.Find(
-		ctx,
-		bson.D{
-			{
-				Key:   "done",
-				Value: false,
-			},
-		},
-		&options.FindOptions{
-			Sort: bson.D{
-				{
-					Key:   "createdAt",
-					Value: 1,
-				},
-			},
-		},
-	)
+	todosNotDone, err := todo.FetchNotDone(ctx, t.c)
 
 	if err != nil {
-		flashMsgCookie := flash.Read(w, r)
-
-		if flashMsgCookie != nil {
-			templateData.FlashMessage = flashMsgCookie
-		} else {
-			templateData.FlashMessage = &flash.Message{
-				Kind:    1,
-				Content: "Error while fetching the list of todos.",
-			}
+		if tData.FlashMessage == nil {
+			tData.FlashMessage = fetchDoneNotDoneErrorMsg
 		}
 
-		utils.WriteTemplates(w, templateData, "todos")
+		utils.WriteTemplates(w, tData, tData.Mode, "no-todos")
 
 		return
 	}
 
-	var todosNotDone []todo.Todo
+	tData.TodosDone = todosDone
+	tData.TodosNotDone = todosNotDone
 
-	err = cursorNotDone.All(
-		context.Background(),
-		&todosNotDone,
-	)
-
-	if err != nil {
-		flashMsgCookie := flash.Read(w, r)
-
-		if flashMsgCookie != nil {
-			templateData.FlashMessage = flashMsgCookie
-		} else {
-			templateData.FlashMessage = &flash.Message{
-				Kind:    1,
-				Content: "Error while fetching the list of todos.",
-			}
-		}
-
-		utils.WriteTemplates(w, templateData, "todos")
-
-		return
-	}
-
-	templateData.TodosDone = todosDone
-	templateData.TodosNotDone = todosNotDone
-	templateData.HasTodos = len(todosDone) != 0 || len(todosNotDone) != 0
-	templateData.FlashMessage = flash.Read(w, r)
-
-	utils.WriteTemplates(w, templateData, "todos")
+	utils.WriteTemplates(w, tData, tData.Mode, "no-todos")
 }
 
-// List lists all todos.
-func (t *Todo) List(w http.ResponseWriter, r *http.Request) {
-	t.fetch(w, r, "add/update")
+/*
+ * List
+ */
+
+// ListGET lists the todos.
+func (t *Todo) ListGET(w http.ResponseWriter, r *http.Request, tData *TemplateData) {
+	tData.Mode = "list"
+
+	t.fetchDoneNotDone(w, r, tData)
 }
 
-// DeleteList lists the todos to delete.
-func (t *Todo) DeleteList(w http.ResponseWriter, r *http.Request) {
-	t.fetch(w, r, "delete")
+/*
+ * Add
+ */
+
+// AddGET renders the form to add a todo.
+func (t *Todo) AddGET(w http.ResponseWriter, r *http.Request, tData *TemplateData) {
+	tData.Mode = "add"
+
+	utils.WriteTemplates(w, tData, "add")
 }
 
-// Add adds a todo.
-func (t *Todo) Add(w http.ResponseWriter, r *http.Request) {
+// AddPOST adds a todo the to the db.
+func (t *Todo) AddPOST(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -190,13 +147,10 @@ func (t *Todo) Add(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		flash.Add(
-			"/",
+			"/add",
 			w,
 			r,
-			&flash.Message{
-				Kind:    1,
-				Content: "Error while adding the todo.",
-			},
+			addPOSTErrorMsg,
 			true,
 		)
 
@@ -204,43 +158,27 @@ func (t *Todo) Add(w http.ResponseWriter, r *http.Request) {
 	}
 
 	flash.Add(
-		"/",
+		"/add",
 		w,
 		r,
-		&flash.Message{
-			Kind:    0,
-			Content: "Todo added!",
-		},
+		addPOSTSuccessMsg,
 		true,
 	)
 }
 
-func updateFlashMessage(w http.ResponseWriter, r *http.Request, success bool) {
-	var msg *flash.Message
+/*
+ * Update
+ */
 
-	if success {
-		msg = &flash.Message{
-			Content: "Todos updated!",
-			Kind:    0,
-		}
-	} else {
-		msg = &flash.Message{
-			Content: "Error while updating todos.",
-			Kind:    1,
-		}
-	}
+// UpdateGET renders the todos to be updated.
+func (t *Todo) UpdateGET(w http.ResponseWriter, r *http.Request, tData *TemplateData) {
+	tData.Mode = "update"
 
-	flash.Add(
-		"/",
-		w,
-		r,
-		msg,
-		true,
-	)
+	t.fetchDoneNotDone(w, r, tData)
 }
 
-// Update updates the todos.
-func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
+// UpdatePOST updates todos.
+func (t *Todo) UpdatePOST(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
@@ -249,14 +187,14 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 	doneTodosIDs, ok := r.Form["done"]
 
 	if ok {
-		// Generate filtering-related values
+		// Filter values
 		filterValue := make(bson.A, len(doneTodosIDs))
 
 		for i, doneTodosID := range doneTodosIDs {
 			oID, err := primitive.ObjectIDFromHex(doneTodosID)
 
 			if err != nil {
-				updateFlashMessage(w, r, false)
+				flash.Add("/update", w, r, updatePOSTErrorMsg, true)
 
 				return
 			}
@@ -269,16 +207,10 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
+		// Update to done = true
 		filterOr := bson.D{
 			{
 				Key:   "$or",
-				Value: filterValue,
-			},
-		}
-
-		filterNor := bson.D{
-			{
-				Key:   "$nor",
 				Value: filterValue,
 			},
 		}
@@ -300,9 +232,17 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			updateFlashMessage(w, r, false)
+			flash.Add("/update", w, r, updatePOSTErrorMsg, true)
 
 			return
+		}
+
+		// Update to done = false
+		filterNor := bson.D{
+			{
+				Key:   "$nor",
+				Value: filterValue,
+			},
 		}
 
 		_, err = t.c.UpdateMany(
@@ -322,7 +262,7 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			updateFlashMessage(w, r, false)
+			flash.Add("/update", w, r, updatePOSTErrorMsg, true)
 
 			return
 		}
@@ -344,11 +284,77 @@ func (t *Todo) Update(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			updateFlashMessage(w, r, false)
+			flash.Add("/update", w, r, updatePOSTErrorMsg, true)
 
 			return
 		}
 	}
 
-	updateFlashMessage(w, r, true)
+	flash.Add("/update", w, r, updatePOSTSuccessMsg, true)
+}
+
+/*
+ * Delete
+ */
+
+// DeleteGET renders the todos to be deleted.
+func (t *Todo) DeleteGET(w http.ResponseWriter, r *http.Request, tData *TemplateData) {
+	tData.Mode = "delete"
+
+	t.fetchDoneNotDone(w, r, tData)
+}
+
+// DeletePOST deletes todos from the db.
+func (t *Todo) DeletePOST(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	r.ParseForm()
+
+	todosToDeleteIDs, ok := r.Form["delete"]
+
+	if ok {
+		filterValue := make(bson.A, len(todosToDeleteIDs))
+
+		for i, doneTodosID := range todosToDeleteIDs {
+			oID, err := primitive.ObjectIDFromHex(doneTodosID)
+
+			if err != nil {
+				flash.Add("/update", w, r, updatePOSTErrorMsg, true)
+
+				return
+			}
+
+			filterValue[i] = bson.D{
+				{
+					Key:   "_id",
+					Value: oID,
+				},
+			}
+		}
+
+		_, err := t.c.DeleteMany(
+			ctx,
+			bson.D{
+				{
+					Key:   "$or",
+					Value: filterValue,
+				},
+			},
+		)
+
+		if err != nil {
+			flash.Add("/delete", w, r, deletePOSTErrorMsg, true)
+
+			return
+		}
+	}
+
+	flash.Add(
+		"/delete",
+		w,
+		r,
+		deletePOSTSuccessMsg,
+		true,
+	)
 }

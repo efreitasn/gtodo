@@ -3,16 +3,17 @@
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
-  src: url(/static/roboto.woff2) format('woff2');
+  src: url(/static/fonts/roboto.woff2) format('woff2');
 }
 
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 700;
-  src: url(/static/roboto-bold.woff2) format('woff2');
+  src: url(/static/fonts/roboto-bold.woff2) format('woff2');
 }
 
+/* General */
 * {
   box-sizing: border-box;
 }
@@ -29,6 +30,7 @@ html {
   --color-grey-2: #808080;
   --color-grey-3: #6B6B6B;
   --color-grey-4: #E6E6E6;
+  --color-grey-5: #A7A7A7;
 }
 
 body {
@@ -40,9 +42,16 @@ body {
   padding: 2rem 0 5rem;
 }
 
-.content {
+.main-content {
   margin: 0 auto;
   width: 90vw;
+}
+
+/* ≃1000px */
+@media (min-width: 62.5em) {
+  .main-content {
+    width: 50vw;   
+  }
 }
 
 .main-nav > ul {
@@ -59,26 +68,21 @@ body {
   font-size: 1.8rem;
   font-weight: bold;
   display: block;
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
   text-decoration: none;
   text-transform: uppercase;
   transition: background-color .3s ease;
 }
 
 .main-nav .active {
-  background: #ffffff;
+  background-color: #FFFFFF;
   box-shadow: 1px -1px 4px rgba(0, 0, 0, 0.02);
 }
 
-.main-nav a:not(.active):hover {
+.main-nav a:not(.active):hover,
+.main-nav a:focus {
   background-color: var(--color-grey-4);
-}
-
-/* ≃1000px */
-@media (min-width: 62.5em) {
-  .content {
-    width: 50vw;   
-  }
+  outline: none;
 }
 
 .box {
@@ -97,10 +101,53 @@ body {
   clip: rect(0, 0, 0, 0);
 }
 
+/* Accordion */
+.accordion-check:checked ~ .accordion-content {
+  display: none;
+}
+
+.accordion-label {
+  background-color: var(--color-grey-1);
+  display: block;
+  position: relative;
+  transition: background-color .2s ease;
+}
+
+.accordion-label > h2 {
+  font-size: 1.6rem;
+  margin: 0;
+  padding: 1.5rem;
+  text-transform: uppercase;
+}
+
+.accordion-label::after {
+  content: '';
+  border-bottom: 2px solid var(--color-grey-3);
+  border-left: 2px solid var(--color-grey-3);
+  height: 6px;
+  position: absolute;
+  right: 20px;
+  top: 22px;
+  transform: rotate(495deg);
+  transition: transform .5s ease;
+  width: 6px;
+}
+
+.accordion-check:checked + .accordion-label::after {
+  top: 19px;
+  transform: rotate(-45deg);
+}
+
+.accordion-check:focus + .accordion-label,
+.accordion-check:hover + .accordion-label {
+  background-color: var(--color-grey-4);
+}
+
 /* Button */
 .button {
   border: 0;
   flex: 1 0 auto;
+  font-family: 'Roboto', sans-serif;
   font-size: 1.8rem;
   font-weight: bold;
   padding: 1rem 2rem;
@@ -133,7 +180,17 @@ body {
   opacity: .9;
 }
 
-/* Add-related */
+/* No todos */
+.no-todos {
+  color: var(--color-grey-5);
+  font-size: 2.3rem;
+  padding: 4rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Add */
 .add-form {
   display: flex;
   flex: 1 0 auto;
@@ -156,55 +213,7 @@ body {
   outline: none;
 }
 
-/* Update-related */
-.update-form {
-  display: flex;
-  flex: 0 1 auto;
-  flex-direction: column;
-  height: 100%;
-  max-height: 100%;
-}
-
-.todos {
-  flex: 0 1 auto;
-  height: 100%;
-}
-
-.todos-done-title {
-  background: var(--color-grey-1);
-  font-size: 1.8rem;
-  margin: 0;
-  padding: 1.5rem;
-  text-transform: uppercase;
-}
-
-.todos-done-title-wrapper {
-  display: block;
-  position: relative;
-}
-
-.todos-done-title-wrapper::after {
-  content: '';
-  border-bottom: 2px solid var(--color-grey-3);
-  border-left: 2px solid var(--color-grey-3);
-  height: 6px;
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  transform: rotate(-45deg);
-  transition: transform .5s ease;
-  width: 6px;
-}
-
-.todos-done-title-check:checked + .todos-done-title-wrapper + .todos-done {
-  display: none;
-}
-
-.todos-done-title-check:checked + .todos-done-title-wrapper::after {
-  top: 22px;
-  transform: rotate(495deg);
-}
-
+/* Todo */
 .todo {
   align-items: center;
   display: flex;
@@ -228,8 +237,7 @@ body {
   word-break: break-all;
 }
 
-/* Checkbox */
-.check {
+.todo-check {
   background-color: transparent;
   border: 2px solid var(--color-grey-4);
   border-radius: 5px;
@@ -240,7 +248,7 @@ body {
   width: 2rem;
 }
 
-.check-input:checked + .check::after {
+.todo-check-input:checked + .todo-check::after {
   content: '';
   border-bottom: 2px solid var(--color-grey-3);
   border-left: 2px solid var(--color-grey-3);
@@ -252,7 +260,7 @@ body {
   width: 8px;
 }
 
-.check-input:focus + .check {
+.todo-check-input:focus + .todo-check {
   box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.08);
 }
 

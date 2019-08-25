@@ -1,112 +1,17 @@
-{{ define "content" }}
+{{ define "todos" }}
 
-<nav class="main-nav">
-  <ul>
-    <li>
-      <a
-        {{ if ne .Mode "add/update" }} href="/" {{ end }}
-        {{ if eq .Mode "add/update" }} class="active" {{ end }}
-      >add/update</a>
-    </li>
-    <li>
-      <a
-        {{ if ne .Mode "delete" }} href="/todos/delete" {{ end }}
-        {{ if eq .Mode "delete" }} class="active" {{ end }}
-      >delete</a>
-    </li>
-  </ul>
-</nav>
-<div class="box">
-  {{ if eq .Mode "add/update" }}
-    <form
-      enctype="application/x-www-form-urlencoded"
-      action="/todos/add"
-      method="POST"
-      class="add-form {{ if .HasTodos }} add-form--border {{ end }}"
+{{ range . }}
+  <label class="todo">
+    <input
+      type="checkbox"
+      name="check"
+      class="check-input invisible"
+      value="{{ .ID.Hex }}"
+      id="{{ .ID.Hex }}"
     >
-      <input
-        type="text"
-        name="title"
-        class="add-input"
-        placeholder="Do something"
-        autocomplete="off"
-        aria-label="Title of todo to be added"
-        required
-        autofocus
-      >
-      <button
-        type="submit"
-        class="button button--add"
-      >Add</button>
-    </form>
-  {{ end }}
-
-  {{ if .FlashMessage }}
-    {{ if .FlashMessage.Kind }}
-      <div class="flash-message flash-message--error">
-      {{ else }}
-      <div class="flash-message flash-message--success">
-    {{ end }}
-      {{ .FlashMessage.Content }}
-    </div>
-  {{ end }}
-
-  {{ if .HasTodos }}
-    <form
-      enctype="application/x-www-form-urlencoded"
-      action="/todos/update"
-      method="POST"
-      class="update-form"
-    >
-      <div class="todos">
-        <div>
-          {{ range .TodosNotDone }}
-            <label class="todo">
-              <input
-                type="checkbox"
-                name="done"
-                class="check-input invisible"
-                value="{{ .ID.Hex }}"
-                id="{{ .ID.Hex }}"
-              >
-              <div class="check"></div>
-              <span>{{ .Title }}</span>
-            </label>
-          {{ end }}
-        </div>
-        <input
-          type="checkbox"
-          class="todos-done-title-check invisible"
-          id="done-check"
-        >
-        <label class="todos-done-title-wrapper" for="done-check">
-          <h2 class="todos-done-title">done</h2>
-        </label>
-        <div class="todos-done">
-          {{ with $data := . }}
-            {{ range .TodosDone }}
-              <label class="todo">
-                <input
-                  type="checkbox"
-                  name="done"
-                  class="check-input invisible"
-                  value="{{ .ID.Hex }}"
-                  id="{{ .ID.Hex }}"
-                  {{ if eq $data.Mode "add/update" }}checked{{ end }}
-                >
-                <div class="check"></div>
-                <span>{{ .Title }}</span>
-              </label>
-            {{ end }}
-          {{ end }}
-        </div>
-      </div>
-      <button
-        type="submit"
-        class="button button--update"
-      >Update</button>
-    </form>
-  {{ end }}
-</div>
+    <div class="check"></div>
+    <span>{{ .Title }}</span>
+  </label>
+{{ end }}
 
 {{ end }}
