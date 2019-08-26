@@ -4,6 +4,7 @@ services:
   api:
     container_name: api
     build: .
+    command: "go run cmd/go-todo/main.go"
     environment: 
       MONGODB_URL: mongodb://mongo:27017
       MONGODB_DB: go-todo
