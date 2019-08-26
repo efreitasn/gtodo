@@ -26,15 +26,21 @@ func NewMux(db *mongo.Database) http.Handler {
 
 	// Login
 	mux.GET("/login", mids.New(auth.LoginGET)(
+		middlewares.HasToBeUnauth,
 		middlewares.SetUpTemplateData,
 	))
-	mux.POST("/login", auth.LoginPOST)
+	mux.POST("/login", mids.New(auth.LoginPOST)(
+		middlewares.HasToBeUnauth,
+	))
 
 	// Signup
 	mux.GET("/signup", mids.New(auth.SignupGET)(
+		middlewares.HasToBeUnauth,
 		middlewares.SetUpTemplateData,
 	))
-	mux.POST("/signup", auth.SignupPOST)
+	mux.POST("/signup", mids.New(auth.SignupPOST)(
+		middlewares.HasToBeUnauth,
+	))
 
 	// List
 	mux.GET("/list", mids.New(todo.ListGET)(

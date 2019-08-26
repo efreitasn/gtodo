@@ -4,7 +4,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Auth is aa
+// Auth is the representation of all the auth-related handlers.
 type Auth struct {
 	c *mongo.Collection
 }

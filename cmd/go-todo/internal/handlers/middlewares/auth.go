@@ -22,7 +22,7 @@ func HasToBeAuth(next http.HandlerFunc) http.HandlerFunc {
 		token, err := r.Cookie("t")
 
 		if err != nil {
-			http.Redirect(w, r, "/login", 302)
+			http.Redirect(w, r, "/login", 303)
 
 			return
 		}
@@ -43,5 +43,29 @@ func HasToBeAuth(next http.HandlerFunc) http.HandlerFunc {
 		newR := r.WithContext(user.ContextWithPayload(r.Context(), &userPayload))
 
 		next(w, newR)
+	}
+}
+
+// HasToBeUnauth checks if the user is unauthenticated to go to the next http.HandlerFunc.
+func HasToBeUnauth(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		token, err := r.Cookie("t")
+
+		if err == http.ErrNoCookie {
+			next(w, r)
+
+			return
+		}
+
+		brca := branca.NewBranca(os.Getenv("BRANCA_SECRET"))
+		_, err = brca.DecodeToString(token.Value)
+
+		if err != nil {
+			next(w, r)
+
+			return
+		}
+
+		http.Redirect(w, r, "/list", 303)
 	}
 }

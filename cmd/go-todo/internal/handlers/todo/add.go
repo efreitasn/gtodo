@@ -45,10 +45,7 @@ func (t *Todo) AddPOST(w http.ResponseWriter, r *http.Request) {
 		UserID:    userPayload.ID,
 	}
 
-	_, err := t.c.InsertOne(
-		ctx,
-		todoToBeInserted,
-	)
+	_, err := t.c.InsertOne(ctx, todoToBeInserted)
 
 	if err != nil {
 		flash.Add("/add", w, r, addPOSTErrorMsg)

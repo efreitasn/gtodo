@@ -48,7 +48,7 @@ func (t *Todo) DeletePOST(w http.ResponseWriter, r *http.Request) {
 			oID, err := primitive.ObjectIDFromHex(doneTodosID)
 
 			if err != nil {
-				flash.Add("/update", w, r, updatePOSTErrorMsg)
+				flash.Add("/delete", w, r, deletePOSTErrorMsg)
 
 				return
 			}

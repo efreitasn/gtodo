@@ -12,11 +12,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var updateGETErrorMsg = &flash.Message{
-	Kind:    1,
-	Content: "Error while fetching the list of todos.",
-}
-
 var updatePOSTSuccessMsg = &flash.Message{
 	Content: "Todos updated!",
 	Kind:    0,
