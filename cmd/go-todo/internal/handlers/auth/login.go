@@ -2,16 +2,13 @@ package auth
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/efreitasn/go-todo/internal/data/template"
 	"github.com/efreitasn/go-todo/internal/data/user"
 	"github.com/efreitasn/go-todo/internal/utils"
 	"github.com/efreitasn/go-todo/pkg/flash"
-	"github.com/hako/branca"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -101,24 +98,14 @@ func (a *Auth) LoginPOST(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stringPayload, err := json.Marshal(user.PayloadFromUser(&u))
+	userPayload := user.PayloadFromUser(&u)
+	err = user.ResponseWithTokenCookie(w, userPayload)
 
 	if err != nil {
 		flash.Add("/login", w, r, loginPOSTEncodingErrorMsg)
 
 		return
 	}
-
-	brca := branca.NewBranca(os.Getenv("BRANCA_SECRET"))
-	token, err := brca.EncodeToString(string(stringPayload))
-
-	http.SetCookie(w, &http.Cookie{
-		Name:     "t",
-		Value:    token,
-		Path:     "/",
-		HttpOnly: true,
-		MaxAge:   int(time.Hour * 24),
-	})
 
 	http.Redirect(w, r, "/list", 303)
 }

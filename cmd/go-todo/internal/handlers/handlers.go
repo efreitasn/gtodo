@@ -5,7 +5,8 @@ import (
 
 	"github.com/dimfeld/httptreemux/v5"
 	"github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/auth"
-	"github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/middlewares"
+	authMiddlewares "github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/middlewares/auth"
+	templateMiddlewares "github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/middlewares/template"
 	"github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/static"
 	"github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/todo"
 	"github.com/efreitasn/go-todo/pkg/mids"
@@ -17,6 +18,8 @@ func NewMux(db *mongo.Database) http.Handler {
 	mux := httptreemux.NewContextMux()
 	todo := todo.New(db.Collection("todos"))
 	auth := auth.New(db.Collection("user"))
+	authMids := authMiddlewares.New(db.Collection("user"))
+	templateMids := templateMiddlewares.New()
 
 	// Root
 	mux.GET("/", http.RedirectHandler("/list", 301).ServeHTTP)
@@ -26,53 +29,53 @@ func NewMux(db *mongo.Database) http.Handler {
 
 	// Login
 	mux.GET("/login", mids.New(auth.LoginGET)(
-		middlewares.HasToBeUnauth,
-		middlewares.SetUpTemplateData,
+		authMids.HasToBeUnauth,
+		templateMids.SetUpTemplateData,
 	))
 	mux.POST("/login", mids.New(auth.LoginPOST)(
-		middlewares.HasToBeUnauth,
+		authMids.HasToBeUnauth,
 	))
 
 	// Signup
 	mux.GET("/signup", mids.New(auth.SignupGET)(
-		middlewares.HasToBeUnauth,
-		middlewares.SetUpTemplateData,
+		authMids.HasToBeUnauth,
+		templateMids.SetUpTemplateData,
 	))
 	mux.POST("/signup", mids.New(auth.SignupPOST)(
-		middlewares.HasToBeUnauth,
+		authMids.HasToBeUnauth,
 	))
 
 	// List
 	mux.GET("/list", mids.New(todo.ListGET)(
-		middlewares.HasToBeAuth,
-		middlewares.SetUpTemplateData,
+		authMids.HasToBeAuth,
+		templateMids.SetUpTemplateData,
 	))
 
 	// Add
 	mux.GET("/add", mids.New(todo.AddGET)(
-		middlewares.HasToBeAuth,
-		middlewares.SetUpTemplateData,
+		authMids.HasToBeAuth,
+		templateMids.SetUpTemplateData,
 	))
 	mux.POST("/add", mids.New(todo.AddPOST)(
-		middlewares.HasToBeAuth,
+		authMids.HasToBeAuth,
 	))
 
 	// Update
 	mux.GET("/update", mids.New(todo.UpdateGET)(
-		middlewares.HasToBeAuth,
-		middlewares.SetUpTemplateData,
+		authMids.HasToBeAuth,
+		templateMids.SetUpTemplateData,
 	))
 	mux.POST("/update", mids.New(todo.UpdatePOST)(
-		middlewares.HasToBeAuth,
+		authMids.HasToBeAuth,
 	))
 
 	// Delete
 	mux.GET("/delete", mids.New(todo.DeleteGET)(
-		middlewares.HasToBeAuth,
-		middlewares.SetUpTemplateData,
+		authMids.HasToBeAuth,
+		templateMids.SetUpTemplateData,
 	))
 	mux.POST("/delete", mids.New(todo.DeletePOST)(
-		middlewares.HasToBeAuth,
+		authMids.HasToBeAuth,
 	))
 
 	return *mux

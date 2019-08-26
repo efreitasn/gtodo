@@ -1,4 +1,4 @@
-package middlewares
+package template
 
 import (
 	"net/http"
@@ -8,8 +8,16 @@ import (
 	"github.com/efreitasn/go-todo/pkg/flash"
 )
 
+// Template is the representation of all the template-related middlewares.
+type Template struct{}
+
+// New creates an Auth struct.
+func New() *Template {
+	return &Template{}
+}
+
 // SetUpTemplateData sets up the template data to be rendered.
-func SetUpTemplateData(next http.HandlerFunc) http.HandlerFunc {
+func (t *Template) SetUpTemplateData(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var tData template.Data
 
