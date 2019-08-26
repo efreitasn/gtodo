@@ -4,15 +4,20 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // FetchDone fetches the done todos.
-func FetchDone(ctx context.Context, c *mongo.Collection) (todos []Todo, err error) {
+func FetchDone(ctx context.Context, c *mongo.Collection, uID *primitive.ObjectID) (todos []Todo, err error) {
 	cursor, err := c.Find(
 		ctx,
 		bson.D{
+			{
+				Key:   "_user",
+				Value: uID,
+			},
 			{
 				Key:   "done",
 				Value: true,
@@ -45,10 +50,14 @@ func FetchDone(ctx context.Context, c *mongo.Collection) (todos []Todo, err erro
 }
 
 // FetchNotDone fetches the not done todos.
-func FetchNotDone(ctx context.Context, c *mongo.Collection) (todos []Todo, err error) {
+func FetchNotDone(ctx context.Context, c *mongo.Collection, uID *primitive.ObjectID) (todos []Todo, err error) {
 	cursor, err := c.Find(
 		ctx,
 		bson.D{
+			{
+				Key:   "_user",
+				Value: uID,
+			},
 			{
 				Key:   "done",
 				Value: false,

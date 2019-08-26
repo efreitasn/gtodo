@@ -16,7 +16,8 @@ type Todo struct {
 
 // InsertTodo is an item to be inserted into the database.
 type InsertTodo struct {
-	Title     string    `bson:"title"`
-	Done      bool      `bson:"done"`
-	CreatedAt time.Time `bson:"createdAt"`
+	UserID    *primitive.ObjectID `bson:"_user"`
+	Title     string              `bson:"title"`
+	Done      bool                `bson:"done"`
+	CreatedAt time.Time           `bson:"createdAt"`
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/efreitasn/go-todo/internal/data/template"
+	"github.com/efreitasn/go-todo/internal/data/user"
 	"github.com/efreitasn/go-todo/pkg/flash"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -42,6 +43,11 @@ func (t *Todo) UpdatePOST(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	doneTodosIDs, ok := r.Form["done"]
+	userPayload := user.PayloadFromContext(r.Context())
+	filterUserID := bson.E{
+		Key:   "_user",
+		Value: userPayload.ID,
+	}
 
 	if ok {
 		// Filter values
@@ -66,6 +72,7 @@ func (t *Todo) UpdatePOST(w http.ResponseWriter, r *http.Request) {
 
 		// Update to done = true
 		filterOr := bson.D{
+			filterUserID,
 			{
 				Key:   "$or",
 				Value: filterValue,
@@ -96,6 +103,7 @@ func (t *Todo) UpdatePOST(w http.ResponseWriter, r *http.Request) {
 
 		// Update to done = false
 		filterNor := bson.D{
+			filterUserID,
 			{
 				Key:   "$nor",
 				Value: filterValue,
@@ -126,7 +134,7 @@ func (t *Todo) UpdatePOST(w http.ResponseWriter, r *http.Request) {
 	} else {
 		_, err := t.c.UpdateMany(
 			ctx,
-			bson.D{},
+			bson.D{filterUserID},
 			bson.D{
 				{
 					Key: "$set",

@@ -7,6 +7,7 @@ import (
 
 	"github.com/efreitasn/go-todo/internal/data/template"
 	"github.com/efreitasn/go-todo/internal/data/todo"
+	"github.com/efreitasn/go-todo/internal/data/user"
 	"github.com/efreitasn/go-todo/internal/utils"
 	"github.com/efreitasn/go-todo/pkg/flash"
 )
@@ -20,8 +21,10 @@ func (t *Todo) fetchDoneNotDone(w http.ResponseWriter, r *http.Request, tData *t
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
+	userPayload := user.PayloadFromContext(r.Context())
+
 	// Done
-	todosDone, err := todo.FetchDone(ctx, t.c)
+	todosDone, err := todo.FetchDone(ctx, t.c, userPayload.ID)
 
 	if err != nil {
 		if tData.FlashMessage == nil {
@@ -34,7 +37,7 @@ func (t *Todo) fetchDoneNotDone(w http.ResponseWriter, r *http.Request, tData *t
 	}
 
 	// Not done
-	todosNotDone, err := todo.FetchNotDone(ctx, t.c)
+	todosNotDone, err := todo.FetchNotDone(ctx, t.c, userPayload.ID)
 
 	if err != nil {
 		if tData.FlashMessage == nil {

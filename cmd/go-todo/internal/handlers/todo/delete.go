@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/efreitasn/go-todo/internal/data/template"
+	"github.com/efreitasn/go-todo/internal/data/user"
 	"github.com/efreitasn/go-todo/pkg/flash"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -39,6 +40,8 @@ func (t *Todo) DeletePOST(w http.ResponseWriter, r *http.Request) {
 	todosToDeleteIDs, ok := r.Form["delete"]
 
 	if ok {
+		userPayload := user.PayloadFromContext(r.Context())
+
 		filterValue := make(bson.A, len(todosToDeleteIDs))
 
 		for i, doneTodosID := range todosToDeleteIDs {
@@ -61,6 +64,10 @@ func (t *Todo) DeletePOST(w http.ResponseWriter, r *http.Request) {
 		_, err := t.c.DeleteMany(
 			ctx,
 			bson.D{
+				{
+					Key:   "_user",
+					Value: userPayload.ID,
+				},
 				{
 					Key:   "$or",
 					Value: filterValue,

@@ -7,6 +7,7 @@ import (
 
 	"github.com/efreitasn/go-todo/internal/data/template"
 	"github.com/efreitasn/go-todo/internal/data/todo"
+	"github.com/efreitasn/go-todo/internal/data/user"
 	"github.com/efreitasn/go-todo/internal/utils"
 	"github.com/efreitasn/go-todo/pkg/flash"
 )
@@ -36,9 +37,12 @@ func (t *Todo) AddPOST(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 
+	userPayload := user.PayloadFromContext(r.Context())
+
 	todoToBeInserted := todo.InsertTodo{
 		Title:     r.Form.Get("title"),
 		CreatedAt: time.Now(),
+		UserID:    userPayload.ID,
 	}
 
 	_, err := t.c.InsertOne(
