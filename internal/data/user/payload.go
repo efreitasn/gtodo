@@ -1,11 +1,15 @@
 package user
 
-import "context"
+import (
+	"context"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 // Payload is the user data that can used in a token.
 type Payload struct {
-	ID       string `json:"id"`
-	Username string `json:"username"`
+	ID       *primitive.ObjectID `json:"id"`
+	Username string              `json:"username"`
 }
 
 type ctxKey string
@@ -24,7 +28,7 @@ func PayloadFromContext(ctx context.Context) *Payload {
 // PayloadFromUser gets a payload from an user.
 func PayloadFromUser(u *User) *Payload {
 	return &Payload{
-		ID:       u.ID.Hex(),
+		ID:       u.ID,
 		Username: u.Username,
 	}
 }
