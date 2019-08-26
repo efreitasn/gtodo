@@ -1,0 +1,56 @@
+package todo
+
+import (
+	"context"
+	"net/http"
+	"time"
+
+	"github.com/efreitasn/go-todo/internal/data/template"
+	"github.com/efreitasn/go-todo/internal/data/todo"
+	"github.com/efreitasn/go-todo/internal/utils"
+	"github.com/efreitasn/go-todo/pkg/flash"
+)
+
+var addPOSTErrorMsg = &flash.Message{
+	Kind:    1,
+	Content: "Error while adding the todo.",
+}
+
+var addPOSTSuccessMsg = &flash.Message{
+	Kind:    0,
+	Content: "Todo added!",
+}
+
+// AddGET renders the form to add a todo.
+func (t *Todo) AddGET(w http.ResponseWriter, r *http.Request) {
+	tData := template.DataFromContext(r.Context())
+	tData.Mode = "add"
+
+	utils.WriteTemplates(w, tData, "add")
+}
+
+// AddPOST adds a todo the to the db.
+func (t *Todo) AddPOST(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	r.ParseForm()
+
+	todoToBeInserted := todo.InsertTodo{
+		Title:     r.Form.Get("title"),
+		CreatedAt: time.Now(),
+	}
+
+	_, err := t.c.InsertOne(
+		ctx,
+		todoToBeInserted,
+	)
+
+	if err != nil {
+		flash.Add("/add", w, r, addPOSTErrorMsg)
+
+		return
+	}
+
+	flash.Add("/add", w, r, addPOSTSuccessMsg)
+}

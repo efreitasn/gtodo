@@ -18,7 +18,7 @@ type Message struct {
 }
 
 // Add adds a flash message to the provided response.
-func Add(url string, w http.ResponseWriter, r *http.Request, msg *Message, withRedirect bool) {
+func Add(url string, w http.ResponseWriter, r *http.Request, msg *Message) {
 	_, err := r.Cookie(cookieName)
 
 	if err != http.ErrNoCookie {
@@ -37,10 +37,7 @@ func Add(url string, w http.ResponseWriter, r *http.Request, msg *Message, withR
 		Value: value,
 	})
 
-	if withRedirect {
-		w.Header().Set("Location", url)
-		w.WriteHeader(303)
-	}
+	http.Redirect(w, r, url, 303)
 }
 
 // Read returns the flash message present in the provided request.

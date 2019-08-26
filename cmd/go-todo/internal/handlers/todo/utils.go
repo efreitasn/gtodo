@@ -1,0 +1,53 @@
+package todo
+
+import (
+	"context"
+	"net/http"
+	"time"
+
+	"github.com/efreitasn/go-todo/internal/data/template"
+	"github.com/efreitasn/go-todo/internal/data/todo"
+	"github.com/efreitasn/go-todo/internal/utils"
+	"github.com/efreitasn/go-todo/pkg/flash"
+)
+
+var fetchDoneNotDoneErrorMsg = &flash.Message{
+	Kind:    1,
+	Content: "Error while fetching the list of todos.",
+}
+
+func (t *Todo) fetchDoneNotDone(w http.ResponseWriter, r *http.Request, tData *template.Data) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	// Done
+	todosDone, err := todo.FetchDone(ctx, t.c)
+
+	if err != nil {
+		if tData.FlashMessage == nil {
+			tData.FlashMessage = fetchDoneNotDoneErrorMsg
+		}
+
+		utils.WriteTemplates(w, tData, tData.Mode, "no-todos")
+
+		return
+	}
+
+	// Not done
+	todosNotDone, err := todo.FetchNotDone(ctx, t.c)
+
+	if err != nil {
+		if tData.FlashMessage == nil {
+			tData.FlashMessage = fetchDoneNotDoneErrorMsg
+		}
+
+		utils.WriteTemplates(w, tData, tData.Mode, "no-todos")
+
+		return
+	}
+
+	tData.TodosDone = todosDone
+	tData.TodosNotDone = todosNotDone
+
+	utils.WriteTemplates(w, tData, tData.Mode, "no-todos")
+}
