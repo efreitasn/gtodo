@@ -16,48 +16,55 @@
         <ul>
           {{ if not .Auth }}
             <li>
-              <a
-                {{ if ne .Mode "login" }} href="/login" {{ end }}
-                {{ if eq .Mode "login" }} class="active" {{ end }}
-              >Login</a>
+              {{ if eq .Mode "login" }}
+                <span class="nav-item nav-item-active">Login</span>
+              {{ else }}
+                <a class="nav-item" href="/login">Login</a>
+              {{ end }}
             </li>
             <li>
-              <a
-                {{ if ne .Mode "signup" }} href="/signup" {{ end }}
-                {{ if eq .Mode "signup" }} class="active" {{ end }}
-              >Signup</a>
+              {{ if eq .Mode "signup" }}
+                <span class="nav-item nav-item-active">Signup</span>
+              {{ else }}
+                <a class="nav-item" href="/signup">Signup</a>
+              {{ end }}
             </li>
           {{ else }}
             <li>
-              <a
-                {{ if ne .Mode "list" }} href="/list" {{ end }}
-                {{ if eq .Mode "list" }} class="active" {{ end }}
-              >List</a>
+              {{ if eq .Mode "list" }}
+                <span class="nav-item nav-item-active">List</span>
+              {{ else }}
+                <a class="nav-item" href="/list">List</a>
+              {{ end }}
             </li>
             <li>
-              <a
-                {{ if ne .Mode "add" }} href="/add" {{ end }}
-                {{ if eq .Mode "add" }} class="active" {{ end }}
-              >Add</a>
+              {{ if eq .Mode "add" }}
+                <span class="nav-item nav-item-active">Add</span>
+              {{ else }}
+                <a class="nav-item" href="/add">Add</a>
+              {{ end }}
             </li>
             <li>
-              <a
-                {{ if ne .Mode "update" }} href="/update" {{ end }}
-                {{ if eq .Mode "update" }} class="active" {{ end }}
-              >Update</a>
+              {{ if eq .Mode "update" }}
+                <span class="nav-item nav-item-active">Update</span>
+              {{ else }}
+                <a class="nav-item" href="/update">Update</a>
+              {{ end }}
             </li>
             <li>
-              <a
-                {{ if ne .Mode "delete" }} href="/delete" {{ end }}
-                {{ if eq .Mode "delete" }} class="active" {{ end }}
-              >Delete</a>
+              {{ if eq .Mode "delete" }}
+                <span class="nav-item nav-item-active">Delete</span>
+              {{ else }}
+                <a class="nav-item" href="/delete">Delete</a>
+              {{ end }}
             </li>
           {{ end }}
           <li>
-            <a
-              {{ if ne .Mode "about" }} href="/about" {{ end }}
-              {{ if eq .Mode "about" }} class="active" {{ end }}
-            >About</a>
+            {{ if eq .Mode "about" }}
+              <span class="nav-item nav-item-active">About</span>
+            {{ else }}
+              <a class="nav-item" href="/about">About</a>
+            {{ end }}
           </li>
         </ul>
       </nav>
