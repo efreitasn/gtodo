@@ -103,6 +103,16 @@ body {
   overflow: hidden;
 }
 
+.footer {
+  padding: 1rem;
+  text-align: right;
+}
+
+.footer a {
+  color: var(--color-grey-2);
+  text-decoration: underline;
+}
+
 /* Utils */
 .invisible {
   position: absolute;
