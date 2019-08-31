@@ -3,7 +3,7 @@ package todo
 import (
 	"net/http"
 
-	"github.com/efreitasn/go-todo/internal/data/template"
+	"github.com/efreitasn/gtodo/internal/data/template"
 )
 
 // ListGET lists the todos.

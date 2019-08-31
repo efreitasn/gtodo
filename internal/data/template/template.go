@@ -3,8 +3,8 @@ package template
 import (
 	"context"
 
-	"github.com/efreitasn/go-todo/internal/data/todo"
-	"github.com/efreitasn/go-todo/pkg/flash"
+	"github.com/efreitasn/gtodo/internal/data/todo"
+	"github.com/efreitasn/gtodo/pkg/flash"
 )
 
 type ctxKey string

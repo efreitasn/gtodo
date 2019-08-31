@@ -4,13 +4,13 @@ import (
 	"net/http"
 
 	"github.com/dimfeld/httptreemux/v5"
-	"github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/about"
-	"github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/auth"
-	authMiddlewares "github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/middlewares/auth"
-	templateMiddlewares "github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/middlewares/template"
-	"github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/static"
-	"github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/todo"
-	"github.com/efreitasn/go-todo/pkg/mids"
+	"github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/about"
+	"github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/auth"
+	authMiddlewares "github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/middlewares/auth"
+	templateMiddlewares "github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/middlewares/template"
+	"github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/static"
+	"github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/todo"
+	"github.com/efreitasn/gtodo/pkg/mids"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

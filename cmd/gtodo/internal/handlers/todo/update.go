@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/efreitasn/go-todo/internal/data/template"
-	"github.com/efreitasn/go-todo/internal/data/user"
-	"github.com/efreitasn/go-todo/pkg/flash"
+	"github.com/efreitasn/gtodo/internal/data/template"
+	"github.com/efreitasn/gtodo/internal/data/user"
+	"github.com/efreitasn/gtodo/pkg/flash"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers"
+	"github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )

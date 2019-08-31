@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/efreitasn/go-todo/internal/data/template"
-	"github.com/efreitasn/go-todo/internal/data/todo"
-	"github.com/efreitasn/go-todo/internal/data/user"
-	"github.com/efreitasn/go-todo/internal/utils"
-	"github.com/efreitasn/go-todo/pkg/flash"
+	"github.com/efreitasn/gtodo/internal/data/template"
+	"github.com/efreitasn/gtodo/internal/data/todo"
+	"github.com/efreitasn/gtodo/internal/data/user"
+	"github.com/efreitasn/gtodo/internal/utils"
+	"github.com/efreitasn/gtodo/pkg/flash"
 )
 
 var fetchDoneNotDoneErrorMsg = &flash.Message{

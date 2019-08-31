@@ -3,9 +3,9 @@ package template
 import (
 	"net/http"
 
-	"github.com/efreitasn/go-todo/internal/data/template"
-	"github.com/efreitasn/go-todo/internal/data/user"
-	"github.com/efreitasn/go-todo/pkg/flash"
+	"github.com/efreitasn/gtodo/internal/data/template"
+	"github.com/efreitasn/gtodo/internal/data/user"
+	"github.com/efreitasn/gtodo/pkg/flash"
 )
 
 // Template is the representation of all the template-related middlewares.

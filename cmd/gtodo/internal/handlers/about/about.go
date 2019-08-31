@@ -3,8 +3,8 @@ package about
 import (
 	"net/http"
 
-	"github.com/efreitasn/go-todo/internal/data/template"
-	"github.com/efreitasn/go-todo/internal/utils"
+	"github.com/efreitasn/gtodo/internal/data/template"
+	"github.com/efreitasn/gtodo/internal/utils"
 )
 
 // About renders the about page.

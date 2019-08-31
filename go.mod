@@ -1,4 +1,4 @@
-module github.com/efreitasn/go-todo
+module github.com/efreitasn/gtodo
 
 go 1.12
 
