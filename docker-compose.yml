@@ -1,3 +1,10 @@
+#############################################
+#
+# This file should not be used in production.
+#
+#############################################
+# The DB username and password, as well as the branca
+# token secret, are hardcoded in this file on purpose.
 version: '3'
 
 services:
