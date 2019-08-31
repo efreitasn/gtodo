@@ -15,6 +15,7 @@ services:
     environment: 
       MONGODB_URI: mongodb://madmin:madmin@mongo:27017
       BRANCA_SECRET: todoToDoTodostodoToDoTodostodoTo
+      PORT: 8080
     ports:
       - "8080:8080"
     volumes:

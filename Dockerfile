@@ -9,6 +9,4 @@ COPY . .
 
 RUN go build -o gtodo cmd/gtodo/main.go
 
-EXPOSE 8080
-
 CMD ["./gtodo"]

@@ -33,7 +33,7 @@ func main() {
 
 	mux := handlers.NewMux(db)
 	server := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":" + os.Getenv("PORT"),
 		Handler: mux,
 	}
 
