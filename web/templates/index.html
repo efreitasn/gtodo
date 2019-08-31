@@ -10,55 +10,58 @@
 </head>
 <body>
   <main class="main-content">
-    <nav class="main-nav">
-      <ul>
-        {{ if not .Auth }}
+    <header>
+      <h1 class="main-title">GTodo</h1>
+      <nav class="main-nav">
+        <ul>
+          {{ if not .Auth }}
+            <li>
+              <a
+                {{ if ne .Mode "login" }} href="/login" {{ end }}
+                {{ if eq .Mode "login" }} class="active" {{ end }}
+              >Login</a>
+            </li>
+            <li>
+              <a
+                {{ if ne .Mode "signup" }} href="/signup" {{ end }}
+                {{ if eq .Mode "signup" }} class="active" {{ end }}
+              >Signup</a>
+            </li>
+          {{ else }}
+            <li>
+              <a
+                {{ if ne .Mode "list" }} href="/list" {{ end }}
+                {{ if eq .Mode "list" }} class="active" {{ end }}
+              >List</a>
+            </li>
+            <li>
+              <a
+                {{ if ne .Mode "add" }} href="/add" {{ end }}
+                {{ if eq .Mode "add" }} class="active" {{ end }}
+              >Add</a>
+            </li>
+            <li>
+              <a
+                {{ if ne .Mode "update" }} href="/update" {{ end }}
+                {{ if eq .Mode "update" }} class="active" {{ end }}
+              >Update</a>
+            </li>
+            <li>
+              <a
+                {{ if ne .Mode "delete" }} href="/delete" {{ end }}
+                {{ if eq .Mode "delete" }} class="active" {{ end }}
+              >Delete</a>
+            </li>
+          {{ end }}
           <li>
             <a
-              {{ if ne .Mode "login" }} href="/login" {{ end }}
-              {{ if eq .Mode "login" }} class="active" {{ end }}
-            >Login</a>
+              {{ if ne .Mode "about" }} href="/about" {{ end }}
+              {{ if eq .Mode "about" }} class="active" {{ end }}
+            >About</a>
           </li>
-          <li>
-            <a
-              {{ if ne .Mode "signup" }} href="/signup" {{ end }}
-              {{ if eq .Mode "signup" }} class="active" {{ end }}
-            >Signup</a>
-          </li>
-        {{ else }}
-          <li>
-            <a
-              {{ if ne .Mode "list" }} href="/list" {{ end }}
-              {{ if eq .Mode "list" }} class="active" {{ end }}
-            >List</a>
-          </li>
-          <li>
-            <a
-              {{ if ne .Mode "add" }} href="/add" {{ end }}
-              {{ if eq .Mode "add" }} class="active" {{ end }}
-            >Add</a>
-          </li>
-          <li>
-            <a
-              {{ if ne .Mode "update" }} href="/update" {{ end }}
-              {{ if eq .Mode "update" }} class="active" {{ end }}
-            >Update</a>
-          </li>
-          <li>
-            <a
-              {{ if ne .Mode "delete" }} href="/delete" {{ end }}
-              {{ if eq .Mode "delete" }} class="active" {{ end }}
-            >Delete</a>
-          </li>
-        {{ end }}
-        <li>
-          <a
-            {{ if ne .Mode "about" }} href="/about" {{ end }}
-            {{ if eq .Mode "about" }} class="active" {{ end }}
-          >About</a>
-        </li>
-      </ul>
-    </nav>
+        </ul>
+      </nav>
+    </header>
     <div class="box">
       {{ if .FlashMessage }}
         {{ if .FlashMessage.Kind }}

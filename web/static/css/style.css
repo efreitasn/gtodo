@@ -41,7 +41,13 @@ body {
   font-family: 'Roboto', sans-serif;
   font-size: 1.6rem;
   overflow-y: auto;
-  padding: 2rem 0 5rem;
+  padding: 3rem 0 5rem;
+}
+
+.main-title {
+  font-size: 4.8rem;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
 .main-content {
