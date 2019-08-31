@@ -18,12 +18,7 @@ func main() {
 
 	mongoOptions := options.Client()
 
-	mongoOptions.ApplyURI(os.Getenv("MONGODB_URL"))
-	mongoOptions.SetAuth(options.Credential{
-		Username:    os.Getenv("MONGODB_USERNAME"),
-		Password:    os.Getenv("MONGODB_PASSWORD"),
-		PasswordSet: os.Getenv("MONGODB_PASSWORD") == "",
-	})
+	mongoOptions.ApplyURI(os.Getenv("MONGODB_URI"))
 
 	client, err := mongo.Connect(
 		ctx,
@@ -34,7 +29,7 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
-	db := client.Database(os.Getenv("MONGODB_DB"))
+	db := client.Database("gtodo")
 
 	mux := handlers.NewMux(db)
 	server := &http.Server{

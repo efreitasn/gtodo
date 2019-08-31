@@ -13,10 +13,7 @@ services:
     build: .
     command: "go run cmd/gtodo/main.go"
     environment: 
-      MONGODB_URL: mongodb://mongo:27017
-      MONGODB_DB: gtodo
-      MONGODB_USERNAME: madmin
-      MONGODB_PASSWORD: madmin
+      MONGODB_URI: mongodb://madmin:madmin@mongo:27017
       BRANCA_SECRET: todoToDoTodostodoToDoTodostodoTo
     ports:
       - "8080:8080"
