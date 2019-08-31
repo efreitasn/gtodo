@@ -66,6 +66,11 @@
               <a class="nav-item" href="/about">About</a>
             {{ end }}
           </li>
+          {{ if eq .Mode "404" }}
+            <li>
+              <span class="nav-item nav-item-active">404</span>
+            </li>
+          {{ end }}
         </ul>
       </nav>
     </header>

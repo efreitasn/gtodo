@@ -328,3 +328,9 @@ body {
 .about > p:not(:last-child) {
   margin-bottom: 1.5rem;
 }
+
+/* 404 */
+.not-found {
+  padding: 4rem 0;
+  text-align: center;
+}

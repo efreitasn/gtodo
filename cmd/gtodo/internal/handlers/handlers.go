@@ -8,6 +8,7 @@ import (
 	"github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/auth"
 	authMiddlewares "github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/middlewares/auth"
 	templateMiddlewares "github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/middlewares/template"
+	"github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/notfound"
 	"github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/static"
 	"github.com/efreitasn/gtodo/cmd/gtodo/internal/handlers/todo"
 	"github.com/efreitasn/gtodo/pkg/mids"
@@ -27,6 +28,12 @@ func NewMux(db *mongo.Database) http.Handler {
 
 	// Static
 	mux.GET("/static/*", static.Static)
+
+	// NotFound
+	mux.NotFoundHandler = mids.New(notfound.NotFound)(
+		authMids.PerformAuth,
+		templateMids.SetUpTemplateData,
+	)
 
 	// About
 	mux.GET("/about", mids.New(about.About)(
