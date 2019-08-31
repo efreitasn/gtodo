@@ -9,10 +9,10 @@
   <title>gtodo</title>
 </head>
 <body>
-  <main class="main-content">
+  <div class="wrapper">
     <header>
       <h1 class="main-title">GTodo</h1>
-      <nav class="main-nav">
+      <nav class="nav">
         <ul>
           {{ if not .Auth }}
             <li>
@@ -62,7 +62,7 @@
         </ul>
       </nav>
     </header>
-    <div class="box">
+    <main class="main-content">
       {{ if .FlashMessage }}
         {{ if .FlashMessage.Kind }}
           <div class="flash-message flash-message--error">
@@ -72,10 +72,10 @@
             {{ .FlashMessage.Content }}
           </div>
       {{ end }}
-
+  
       {{ template "content" . }}
-    </div>
-  </main>
+    </main>
+  </div>
 </body>
 </html>
 
