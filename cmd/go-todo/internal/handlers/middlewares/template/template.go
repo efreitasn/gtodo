@@ -34,3 +34,26 @@ func (t *Template) SetUpTemplateData(next http.HandlerFunc) http.HandlerFunc {
 		next(w, newR)
 	}
 }
+
+// PushAssets uses http2 server push to send the static assets that will be needed in all html pages.
+func (t *Template) PushAssets(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if pusher, ok := w.(http.Pusher); ok {
+			files := []string{
+				"/static/css/style.css",
+				"/static/fonts/roboto-bold.woff2",
+				"/static/fonts/roboto.woff2",
+			}
+
+			for _, file := range files {
+				err := pusher.Push(file, nil)
+
+				if err != nil {
+					break
+				}
+			}
+		}
+
+		next(w, r)
+	}
+}
