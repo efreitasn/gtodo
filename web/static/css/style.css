@@ -293,3 +293,22 @@ body {
   background-color: var(--color-red-1);
   color: var(--color-red-2);
 }
+
+/* About */
+.about {
+  padding: 2rem;
+}
+
+.about a {
+  color: var(--color-grey-2);
+  text-decoration: underline;
+}
+
+.about > p {
+  line-height: 1.8;
+  text-align: justify;
+}
+
+.about > p:not(:last-child) {
+  margin-bottom: 1.5rem;
+}

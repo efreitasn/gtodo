@@ -1,0 +1,15 @@
+{{ define "content" }}
+
+<div class="about">
+  <p>
+    This is a todo web app without JavaScript, i.e. no async calls. It uses the action attribute of the form tag to send data to a go HTTP/2 server through a POST request. The server, in turn, is responsible for the MongoDB connection, serving static assets and generating html files from templates using the <a href="https://godoc.org/html/template" target="_blank">html/template package</a>.
+  </p>
+  <p>
+    This app was mainly made in order to learn more about the <a href="https://godoc.org/net/http">net/http package</a>, the <a href="https://godoc.org/html/template" target="_blank">html/template package</a> and the <a href="https://github.com/mongodb/mongo-go-driver" target="_blank">MongoDB driver package</a>.
+  </p>
+  <p>
+    The source code, as well as instructions on how to run this app on your machine, is <a href="https://github.com/efreitasn/go-todo" target="_blank">available on GitHub</a> under an MIT license.
+  </p>
+</div>
+
+{{ end }}

@@ -51,6 +51,12 @@
             >Delete</a>
           </li>
         {{ end }}
+        <li>
+          <a
+            {{ if ne .Mode "about" }} href="/about" {{ end }}
+            {{ if eq .Mode "about" }} class="active" {{ end }}
+          >About</a>
+        </li>
       </ul>
     </nav>
     <div class="box">

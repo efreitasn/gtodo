@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/dimfeld/httptreemux/v5"
+	"github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/about"
 	"github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/auth"
 	authMiddlewares "github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/middlewares/auth"
 	templateMiddlewares "github.com/efreitasn/go-todo/cmd/go-todo/internal/handlers/middlewares/template"
@@ -26,6 +27,12 @@ func NewMux(db *mongo.Database) http.Handler {
 
 	// Static
 	mux.GET("/static/*", static.Static)
+
+	// About
+	mux.GET("/about", mids.New(about.About)(
+		authMids.PerformAuth,
+		templateMids.SetUpTemplateData,
+	))
 
 	// Login
 	mux.GET("/login", mids.New(auth.LoginGET)(
