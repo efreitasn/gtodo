@@ -29,39 +29,8 @@ var dbErrrorMessage = &flash.Message{
 	Content: "Error while connecting to the database",
 }
 
-// HasToBeAuth checks if the user is authenticated to go to the next http.HandlerFunc.
-func (a *Auth) HasToBeAuth(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		userPayload := user.PayloadFromTokenCookie(r)
-
-		if userPayload == nil {
-			flash.Add("/login", w, r, notAuthErrorMessage)
-
-			return
-		}
-
-		exist, err := a.userExist(userPayload.ID)
-
-		if err != nil {
-			flash.Add("/login", w, r, dbErrrorMessage)
-
-			return
-		}
-
-		if !exist {
-			flash.Add("/login", w, r, notAuthErrorMessage)
-
-			return
-		}
-
-		newR := r.WithContext(user.ContextWithPayload(r.Context(), userPayload))
-
-		next(w, newR)
-	}
-}
-
-// HasToBeUnauth checks if the user is unauthenticated to go to the next http.HandlerFunc.
-func (a *Auth) HasToBeUnauth(next http.HandlerFunc) http.HandlerFunc {
+// PerformAuth performs the user authentication process.
+func (a *Auth) PerformAuth(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userPayload := user.PayloadFromTokenCookie(r)
 
@@ -80,6 +49,40 @@ func (a *Auth) HasToBeUnauth(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		if !exist {
+			next(w, r)
+
+			return
+		}
+
+		newR := r.WithContext(user.ContextWithPayload(r.Context(), userPayload))
+
+		next(w, newR)
+	}
+}
+
+// HasToBeAuth checks if the user is authenticated to go to the next http.HandlerFunc.
+// PerformAuth has to be run before this middleware.
+func (a *Auth) HasToBeAuth(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userPayload := user.PayloadFromContext(r.Context())
+
+		if userPayload == nil {
+			flash.Add("/login", w, r, notAuthErrorMessage)
+
+			return
+		}
+
+		next(w, r)
+	}
+}
+
+// HasToBeUnauth checks if the user is unauthenticated to go to the next http.HandlerFunc.
+// PerformAuth has to be run before this middleware.
+func (a *Auth) HasToBeUnauth(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userPayload := user.PayloadFromContext(r.Context())
+
+		if userPayload == nil {
 			next(w, r)
 
 			return

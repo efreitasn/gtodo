@@ -29,26 +29,31 @@ func NewMux(db *mongo.Database) http.Handler {
 
 	// Login
 	mux.GET("/login", mids.New(auth.LoginGET)(
+		authMids.PerformAuth,
 		authMids.HasToBeUnauth,
 		templateMids.SetUpTemplateData,
 		templateMids.PushAssets,
 	))
 	mux.POST("/login", mids.New(auth.LoginPOST)(
+		authMids.PerformAuth,
 		authMids.HasToBeUnauth,
 	))
 
 	// Signup
 	mux.GET("/signup", mids.New(auth.SignupGET)(
+		authMids.PerformAuth,
 		authMids.HasToBeUnauth,
 		templateMids.SetUpTemplateData,
 		templateMids.PushAssets,
 	))
 	mux.POST("/signup", mids.New(auth.SignupPOST)(
+		authMids.PerformAuth,
 		authMids.HasToBeUnauth,
 	))
 
 	// List
 	mux.GET("/list", mids.New(todo.ListGET)(
+		authMids.PerformAuth,
 		authMids.HasToBeAuth,
 		templateMids.SetUpTemplateData,
 		templateMids.PushAssets,
@@ -56,31 +61,37 @@ func NewMux(db *mongo.Database) http.Handler {
 
 	// Add
 	mux.GET("/add", mids.New(todo.AddGET)(
+		authMids.PerformAuth,
 		authMids.HasToBeAuth,
 		templateMids.SetUpTemplateData,
 		templateMids.PushAssets,
 	))
 	mux.POST("/add", mids.New(todo.AddPOST)(
+		authMids.PerformAuth,
 		authMids.HasToBeAuth,
 	))
 
 	// Update
 	mux.GET("/update", mids.New(todo.UpdateGET)(
+		authMids.PerformAuth,
 		authMids.HasToBeAuth,
 		templateMids.SetUpTemplateData,
 		templateMids.PushAssets,
 	))
 	mux.POST("/update", mids.New(todo.UpdatePOST)(
+		authMids.PerformAuth,
 		authMids.HasToBeAuth,
 	))
 
 	// Delete
 	mux.GET("/delete", mids.New(todo.DeleteGET)(
+		authMids.PerformAuth,
 		authMids.HasToBeAuth,
 		templateMids.SetUpTemplateData,
 		templateMids.PushAssets,
 	))
 	mux.POST("/delete", mids.New(todo.DeletePOST)(
+		authMids.PerformAuth,
 		authMids.HasToBeAuth,
 	))
 
