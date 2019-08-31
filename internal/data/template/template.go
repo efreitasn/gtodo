@@ -15,6 +15,7 @@ var dataCtxKey ctxKey = "templateData"
 type Data struct {
 	FlashMessage *flash.Message
 	Mode         string
+	Title        string
 	Auth         bool
 	TodosDone    []todo.Todo
 	TodosNotDone []todo.Todo

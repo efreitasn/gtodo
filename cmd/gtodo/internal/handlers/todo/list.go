@@ -10,6 +10,7 @@ import (
 func (t *Todo) ListGET(w http.ResponseWriter, r *http.Request) {
 	tData := template.DataFromContext(r.Context())
 	tData.Mode = "list"
+	tData.Title = "List"
 
 	t.fetchDoneNotDone(w, r, tData)
 }

@@ -43,6 +43,7 @@ var loginPOSTEncodingErrorMsg = &flash.Message{
 func (a *Auth) LoginGET(w http.ResponseWriter, r *http.Request) {
 	tData := template.DataFromContext(r.Context())
 	tData.Mode = "login"
+	tData.Title = "Login"
 
 	utils.WriteTemplates(w, tData, "login")
 }

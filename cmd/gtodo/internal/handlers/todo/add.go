@@ -26,6 +26,7 @@ var addPOSTSuccessMsg = &flash.Message{
 func (t *Todo) AddGET(w http.ResponseWriter, r *http.Request) {
 	tData := template.DataFromContext(r.Context())
 	tData.Mode = "add"
+	tData.Title = "Add"
 
 	utils.WriteTemplates(w, tData, "add")
 }

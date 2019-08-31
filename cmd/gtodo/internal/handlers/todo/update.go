@@ -26,6 +26,7 @@ var updatePOSTErrorMsg = &flash.Message{
 func (t *Todo) UpdateGET(w http.ResponseWriter, r *http.Request) {
 	tData := template.DataFromContext(r.Context())
 	tData.Mode = "update"
+	tData.Title = "Update"
 
 	t.fetchDoneNotDone(w, r, tData)
 }

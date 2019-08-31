@@ -26,6 +26,7 @@ var signupPOSTSuccessMsg = &flash.Message{
 func (a *Auth) SignupGET(w http.ResponseWriter, r *http.Request) {
 	tData := template.DataFromContext(r.Context())
 	tData.Mode = "signup"
+	tData.Title = "Signup"
 
 	utils.WriteTemplates(w, tData, "signup")
 }

@@ -11,6 +11,7 @@ import (
 func About(w http.ResponseWriter, r *http.Request) {
 	tData := template.DataFromContext(r.Context())
 	tData.Mode = "about"
+	tData.Title = "About"
 
 	utils.WriteTemplates(w, tData, "about")
 }

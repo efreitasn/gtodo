@@ -26,6 +26,7 @@ var deletePOSTErrorMsg = &flash.Message{
 func (t *Todo) DeleteGET(w http.ResponseWriter, r *http.Request) {
 	tData := template.DataFromContext(r.Context())
 	tData.Mode = "delete"
+	tData.Title = "Delete"
 
 	t.fetchDoneNotDone(w, r, tData)
 }
