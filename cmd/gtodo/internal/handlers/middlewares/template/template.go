@@ -35,7 +35,7 @@ func (t *Template) SetUpTemplateData(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-// PushAssets uses http2 server push to send the static assets that will be needed in all html pages.
+// PushAssets uses HTTP/2 server push to send the static assets that will be needed in all html pages.
 func (t *Template) PushAssets(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if pusher, ok := w.(http.Pusher); ok {
