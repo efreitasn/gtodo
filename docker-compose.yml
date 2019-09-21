@@ -5,13 +5,15 @@
 #############################################
 # The DB username and password, as well as the branca
 # token secret, are hardcoded in this file on purpose.
-version: '3'
+version: '3.7'
 
 services:
   api:
     container_name: api
-    build: .
-    command: "go run cmd/gtodo/main.go"
+    build:
+      context: .
+      target: build
+    command: "/go/bin/wrun"
     environment: 
       MONGODB_URI: mongodb://madmin:madmin@mongo:27017
       BRANCA_SECRET: todoToDoTodostodoToDoTodostodoTo

@@ -1,0 +1,12 @@
+{
+  "PRECMD": [
+    "go",
+    "build",
+    "-o",
+    "../gtodo-api",
+    "cmd/gtodo/main.go"
+  ],
+  "CMD": [
+    "../gtodo-api"
+  ]
+}
