@@ -26,7 +26,7 @@ func main() {
 	)
 
 	if err != nil {
-		log.Fatalln(err.Error())
+		log.Fatalln(err)
 	}
 
 	db := client.Database("gtodo")
@@ -37,5 +37,8 @@ func main() {
 		Handler: mux,
 	}
 
-	server.ListenAndServeTLS("./.cert/cert.pem", "./.cert/key.pem")
+	err = server.ListenAndServeTLS("./.cert/cert.pem", "./.cert/key.pem")
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
