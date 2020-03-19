@@ -1,6 +1,6 @@
 module github.com/efreitasn/gtodo
 
-go 1.13
+go 1.14
 
 require (
 	github.com/dimfeld/httptreemux/v5 v5.0.2

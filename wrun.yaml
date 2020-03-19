@@ -1,0 +1,19 @@
+delayToKill: 1000
+fatalIfErr: false
+cmds:
+  - delayToKill: 1000
+    fatalIfErr: true
+    terms:
+      - "go"
+      - "build"
+      - "-o"
+      - "gtodo"
+      - "cmd/gtodo/main.go"
+  - terms:
+      - "./gtodo"
+ignoreRegExps:
+  - "^gtodo$"
+  - "^data\\/?"
+  - "go.*tmp"
+  - "go.*mod"
+  - "go.*sum"

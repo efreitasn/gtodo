@@ -10,8 +10,9 @@ version: '3.7'
 services:
   api:
     container_name: api
-    build:
-      context: .
+    build: dev/gtodo
+    volumes:
+      - ./:/app
     environment: 
       MONGODB_URI: mongodb://madmin:madmin@mongo:27017
       BRANCA_SECRET: todoToDoTodostodoToDoTodostodoTo

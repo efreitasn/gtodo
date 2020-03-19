@@ -1,9 +1,0 @@
-version: '3.7'
-
-services:
-  api:
-    build:
-      target: base
-    command: "go run github.com/efreitasn/gtodo/cmd/gtodo"
-    volumes:
-      - ./:/gtodo

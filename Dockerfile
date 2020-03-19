@@ -1,15 +1,13 @@
-FROM golang:1.13 as base
-WORKDIR /gtodo
+FROM golang:1.14
+WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
+RUN CGO_ENABLED=0 go build -o gtodo cmd/gtodo/main.go
 
-FROM base as build
-RUN CGO_ENABLED=0 go build -o gtodo-api cmd/gtodo/main.go
-
-FROM alpine:latest as prod
-WORKDIR /gtodo
-COPY --from=build /gtodo/gtodo-api .
-COPY --from=build /gtodo/.cert ./.cert
-COPY --from=build /gtodo/web ./web
-CMD ["./gtodo-api"]
+FROM alpine:3.11
+WORKDIR /app
+COPY --from=0 /app/gtodo ./gtodo
+COPY --from=0 /app/.cert ./.cert
+COPY --from=0 /app/web ./web
+CMD ["./gtodo"]
